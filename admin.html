@@ -32,6 +32,7 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
         
         .logo {
@@ -42,6 +43,7 @@
         
         .logo h2 {
             color: #27ae60;
+            font-size: 1.5rem;
         }
         
         .nav-menu {
@@ -50,11 +52,12 @@
         }
         
         .nav-menu li {
-            padding: 0;
+            margin: 5px 0;
         }
         
         .nav-menu a {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 15px 25px;
             color: #ddd;
             text-decoration: none;
@@ -73,6 +76,7 @@
             width: 25px;
             text-align: center;
             margin-left: 10px;
+            font-size: 1.1rem;
         }
         
         /* محتوای اصلی */
@@ -80,6 +84,7 @@
             flex: 1;
             margin-right: 250px;
             padding: 20px;
+            width: calc(100% - 250px);
         }
         
         .header {
@@ -95,6 +100,7 @@
         
         .header h1 {
             color: #2c3e50;
+            font-size: 1.5rem;
         }
         
         .btn {
@@ -105,11 +111,15 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .btn:hover {
             background: #219653;
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
@@ -135,6 +145,12 @@
             padding: 25px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: none;
+        }
+        
+        .card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
         
         .form-group {
@@ -160,11 +176,13 @@
         .form-control:focus {
             border-color: #27ae60;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
         
         /* جدول محصولات */
         .table-container {
             overflow-x: auto;
+            margin-top: 20px;
         }
         
         table {
@@ -181,11 +199,13 @@
             color: white;
             padding: 15px;
             text-align: right;
+            font-weight: 500;
         }
         
         td {
             padding: 15px;
             border-bottom: 1px solid #eee;
+            vertical-align: middle;
         }
         
         tr:hover {
@@ -211,6 +231,11 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
         .stat-icon {
@@ -228,6 +253,7 @@
         
         .stat-label {
             color: #7f8c8d;
+            font-size: 0.9rem;
         }
         
         /* استایل برای تغییر رمز عبور */
@@ -255,12 +281,14 @@
             background: #e74c3c;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
+            transition: background 0.3s;
         }
         
         .logout-btn:hover {
@@ -280,11 +308,12 @@
             
             .main-content {
                 margin-right: 70px;
+                width: calc(100% - 70px);
             }
             
             .nav-menu a {
-                text-align: center;
                 padding: 15px 0;
+                justify-content: center;
             }
             
             .nav-menu i {
@@ -308,6 +337,7 @@
                 display: flex;
                 justify-content: center;
                 flex-wrap: wrap;
+                padding: 10px;
             }
             
             .nav-menu li {
@@ -317,7 +347,76 @@
             
             .main-content {
                 margin-right: 0;
+                width: 100%;
+                padding: 15px;
             }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* نوتیفیکیشن */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 3000;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-width: 400px;
+        }
+        
+        .notification.success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .notification.info {
+            background: #3498db;
+            color: white;
+        }
+        
+        .notification.warning {
+            background: #f39c12;
+            color: white;
         }
     </style>
 </head>
@@ -341,17 +440,29 @@
         <aside class="sidebar">
             <div class="logo">
                 <h2><i class="fas fa-cogs"></i> مدیریت</h2>
-                <p style="font-size: 0.9rem; color: #aaa; margin-top: 5px;" id="admin-name">
+                <p style="font-size: 0.8rem; color: #aaa; margin-top: 5px;" id="admin-name">
                     <!-- نام کاربری نمایش داده می‌شود -->
                 </p>
             </div>
             <ul class="nav-menu">
-                <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> <span>داشبورد</span></a></li>
-                <li><a href="#products"><i class="fas fa-box-open"></i> <span>محصولات</span></a></li>
-                <li><a href="#orders"><i class="fas fa-shopping-cart"></i> <span>سفارشات</span></a></li>
-                <li><a href="#settings"><i class="fas fa-cog"></i> <span>تنظیمات</span></a></li>
-                <li><a href="../index.html" target="_blank"><i class="fas fa-store"></i> <span>مشاهده فروشگاه</span></a></li>
-                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></a></li>
+                <li><a href="#dashboard" class="active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> <span>داشبورد</span>
+                </a></li>
+                <li><a href="#products" data-section="products">
+                    <i class="fas fa-box-open"></i> <span>محصولات</span>
+                </a></li>
+                <li><a href="#orders" data-section="orders">
+                    <i class="fas fa-shopping-cart"></i> <span>سفارشات</span>
+                </a></li>
+                <li><a href="#settings" data-section="settings">
+                    <i class="fas fa-cog"></i> <span>تنظیمات</span>
+                </a></li>
+                <li><a href="../index.html" target="_blank">
+                    <i class="fas fa-store"></i> <span>مشاهده فروشگاه</span>
+                </a></li>
+                <li><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>خروج</span>
+                </a></li>
             </ul>
         </aside>
 
@@ -361,121 +472,154 @@
             <div class="header">
                 <div>
                     <h1><i class="fas fa-tachometer-alt"></i> پنل مدیریت دکان آنلاین</h1>
-                    <p style="color: #666; margin-top: 5px;">ولایت غور، افغانستان</p>
+                    <p style="color: #666; margin-top: 5px; font-size: 0.9rem;">ولایت غور، افغانستان</p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <span id="current-date" style="color: #666;"></span>
+                    <span id="current-date" style="color: #666; font-size: 0.9rem;"></span>
                     <button class="logout-btn" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> خروج
                     </button>
                 </div>
             </div>
 
-            <!-- آمار کلی -->
-            <div class="stats-grid" id="dashboard">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-box"></i>
+            <!-- داشبورد -->
+            <div class="card active" id="dashboard-section">
+                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <i class="fas fa-tachometer-alt"></i> داشبورد مدیریت
+                </h2>
+                
+                <!-- آمار کلی -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-number" id="total-products">0</div>
+                        <div class="stat-label">تعداد محصولات</div>
                     </div>
-                    <div class="stat-number" id="total-products">0</div>
-                    <div class="stat-label">تعداد محصولات</div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-number" id="total-orders">0</div>
+                        <div class="stat-label">سفارشات امروز</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-number" id="total-revenue">0</div>
+                        <div class="stat-label">درآمد امروز (افغانی)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number" id="total-views">0</div>
+                        <div class="stat-label">بازدید امروز</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-shopping-cart"></i>
+                
+                <!-- راهنما -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i> راهنمای سریع
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-plus-circle" style="color: #27ae60; font-size: 1.2rem;"></i>
+                            <span>برای افزودن محصول جدید به بخش "محصولات" بروید</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-shopping-cart" style="color: #3498db; font-size: 1.2rem;"></i>
+                            <span>سفارشات مشتریان در بخش "سفارشات" نمایش داده می‌شود</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-key" style="color: #e74c3c; font-size: 1.2rem;"></i>
+                            <span>رمز عبور خود را در بخش "تنظیمات" تغییر دهید</span>
+                        </div>
                     </div>
-                    <div class="stat-number" id="total-orders">0</div>
-                    <div class="stat-label">سفارشات امروز</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="stat-number" id="total-revenue">0</div>
-                    <div class="stat-label">درآمد امروز (افغانی)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="stat-number" id="total-views">0</div>
-                    <div class="stat-label">بازدید امروز</div>
                 </div>
             </div>
 
-            <!-- فرم افزودن محصول -->
-            <div class="card" id="products">
-                <h2 style="margin-bottom: 25px; color: #2c3e50;">
-                    <i class="fas fa-plus-circle"></i> مدیریت محصولات
+            <!-- بخش محصولات -->
+            <div class="card" id="products-section">
+                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <i class="fas fa-box-open"></i> مدیریت محصولات
                 </h2>
                 
-                <h3 style="color: #2c3e50; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #eee;">
-                    <i class="fas fa-plus"></i> افزودن محصول جدید
-                </h3>
-                
-                <form id="add-product-form">
-                    <div class="form-group">
-                        <label for="product-name">نام محصول:</label>
-                        <input type="text" id="product-name" class="form-control" placeholder="مثال: گوشی سامسونگ" required>
-                    </div>
+                <!-- فرم افزودن محصول -->
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                        <i class="fas fa-plus-circle"></i> افزودن محصول جدید
+                    </h3>
                     
-                    <div class="form-group">
-                        <label for="product-description">توضیحات:</label>
-                        <textarea id="product-description" class="form-control" rows="3" placeholder="توضیحات محصول..." required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="product-price">قیمت (افغانی):</label>
-                        <input type="number" id="product-price" class="form-control" placeholder="مثال: 25000" min="0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="product-category">دسته‌بندی:</label>
-                        <select id="product-category" class="form-control" required>
-                            <option value="">انتخاب کنید</option>
-                            <option value="electronics">الکترونیکی</option>
-                            <option value="clothing">پوشاک</option>
-                            <option value="home">لوازم خانه</option>
-                            <option value="sports">ورزشی</option>
-                            <option value="food">مواد غذایی</option>
-                            <option value="other">سایر</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="product-stock">موجودی:</label>
-                        <input type="number" id="product-stock" class="form-control" placeholder="تعداد در انبار" min="0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="product-image">آدرس تصویر:</label>
-                        <input type="url" id="product-image" class="form-control" placeholder="https://example.com/image.jpg" required>
-                        <small style="color: #666; display: block; margin-top: 5px;">
-                            می‌توانید از <a href="https://unsplash.com" target="_blank">Unsplash.com</a> آدرس عکس بگیرید
-                        </small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="product-badge">برچسب:</label>
-                        <select id="product-badge" class="form-control">
-                            <option value="">بدون برچسب</option>
-                            <option value="جدید">جدید</option>
-                            <option value="پرفروش">پرفروش</option>
-                            <option value="تخفیف">تخفیف</option>
-                            <option value="محصول محلی">محصول محلی</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn" id="submit-product-btn">
-                        <i class="fas fa-save"></i> ذخیره محصول
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="clearProductForm()" style="margin-right: 10px;">
-                        <i class="fas fa-eraser"></i> پاک کردن فرم
-                    </button>
-                    <button type="button" class="btn" style="background: #9b59b6;" onclick="addSampleProduct()" style="margin-right: 10px;">
-                        <i class="fas fa-magic"></i> افزودن محصول نمونه
-                    </button>
-                </form>
+                    <form id="add-product-form">
+                        <div class="form-group">
+                            <label for="product-name"><i class="fas fa-tag"></i> نام محصول:</label>
+                            <input type="text" id="product-name" class="form-control" placeholder="مثال: گوشی سامسونگ" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-description"><i class="fas fa-align-left"></i> توضیحات:</label>
+                            <textarea id="product-description" class="form-control" rows="3" placeholder="توضیحات محصول..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-price"><i class="fas fa-money-bill-wave"></i> قیمت (افغانی):</label>
+                            <input type="number" id="product-price" class="form-control" placeholder="مثال: 25000" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-category"><i class="fas fa-folder"></i> دسته‌بندی:</label>
+                            <select id="product-category" class="form-control" required>
+                                <option value="">انتخاب کنید</option>
+                                <option value="electronics">الکترونیکی</option>
+                                <option value="clothing">پوشاک</option>
+                                <option value="home">لوازم خانه</option>
+                                <option value="sports">ورزشی</option>
+                                <option value="food">مواد غذایی</option>
+                                <option value="other">سایر</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-stock"><i class="fas fa-cubes"></i> موجودی:</label>
+                            <input type="number" id="product-stock" class="form-control" placeholder="تعداد در انبار" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-image"><i class="fas fa-image"></i> آدرس تصویر:</label>
+                            <input type="url" id="product-image" class="form-control" placeholder="https://example.com/image.jpg" required>
+                            <small style="color: #666; display: block; margin-top: 5px;">
+                                می‌توانید از <a href="https://unsplash.com" target="_blank" style="color: #3498db;">Unsplash.com</a> آدرس عکس بگیرید
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-badge"><i class="fas fa-certificate"></i> برچسب:</label>
+                            <select id="product-badge" class="form-control">
+                                <option value="">بدون برچسب</option>
+                                <option value="جدید">جدید</option>
+                                <option value="پرفروش">پرفروش</option>
+                                <option value="تخفیف">تخفیف</option>
+                                <option value="محصول محلی">محصول محلی</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="submit" class="btn" id="submit-product-btn">
+                                <i class="fas fa-save"></i> ذخیره محصول
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearProductForm()">
+                                <i class="fas fa-eraser"></i> پاک کردن فرم
+                            </button>
+                            <button type="button" class="btn" style="background: #9b59b6;" onclick="addSampleProduct()">
+                                <i class="fas fa-magic"></i> محصول نمونه
+                            </button>
+                        </div>
+                    </form>
+                </div>
                 
                 <!-- لیست محصولات -->
                 <h3 style="color: #2c3e50; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #eee;">
@@ -502,9 +646,9 @@
                 </div>
             </div>
 
-            <!-- سفارشات -->
-            <div class="card" id="orders" style="display: none;">
-                <h2 style="margin-bottom: 25px; color: #2c3e50;">
+            <!-- بخش سفارشات -->
+            <div class="card" id="orders-section">
+                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
                 </h2>
                 
@@ -528,12 +672,13 @@
                 </div>
             </div>
 
-            <!-- بخش تنظیمات رمز عبور -->
-            <div class="card" id="settings" style="display: none;">
-                <h2 style="margin-bottom: 25px; color: #2c3e50;">
+            <!-- بخش تنظیمات -->
+            <div class="card" id="settings-section">
+                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-cog"></i> تنظیمات سیستم
                 </h2>
                 
+                <!-- تغییر رمز عبور -->
                 <div class="change-password-form">
                     <h3 style="color: #2c3e50; margin-bottom: 20px;">
                         <i class="fas fa-key"></i> تغییر رمز عبور
@@ -573,23 +718,23 @@
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50;">نام کاربری فعلی</div>
-                            <div id="current-username" style="color: #27ae60; font-weight: bold;"></div>
+                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نام کاربری فعلی</div>
+                            <div id="current-username" style="color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
                         </div>
                         
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50;">آخرین ورود</div>
-                            <div id="last-login" style="color: #666;"></div>
+                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">آخرین ورود</div>
+                            <div id="last-login" style="color: #666; margin-top: 5px; font-size: 0.9rem;"></div>
                         </div>
                         
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50;">نسخه سیستم</div>
-                            <div style="color: #666;">2.0.0</div>
+                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نسخه سیستم</div>
+                            <div style="color: #666; margin-top: 5px; font-weight: bold;">2.0.0</div>
                         </div>
                         
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50;">تعداد محصولات</div>
-                            <div id="sys-total-products" style="color: #27ae60; font-weight: bold;">0</div>
+                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">تعداد محصولات</div>
+                            <div id="sys-total-products" style="color: #27ae60; font-weight: bold; margin-top: 5px;">0</div>
                         </div>
                     </div>
                 </div>
@@ -598,13 +743,73 @@
     </div>
 
     <script>
-        // ==================== مدیریت محصولات ====================
-        
+        // ==================== متغیرهای全局 ====================
         let products = [];
         let orders = [];
         let currentEditId = null;
         
-        // بارگذاری داده‌ها
+        // ==================== مدیریت منو ====================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('پنل مدیریت در حال راه‌اندازی...');
+            
+            // نمایش نام کاربری
+            const username = sessionStorage.getItem('admin_username') || 'مدیر';
+            document.getElementById('admin-name').textContent = username;
+            document.getElementById('current-username').textContent = username;
+            
+            // تاریخ آخرین ورود
+            const lastLogin = localStorage.getItem('admin_last_login');
+            if (lastLogin) {
+                document.getElementById('last-login').textContent = lastLogin;
+            }
+            
+            // ذخیره زمان ورود فعلی
+            const now = new Date().toLocaleString('fa-IR');
+            localStorage.setItem('admin_last_login', now);
+            
+            // نمایش تاریخ جاری
+            document.getElementById('current-date').textContent = now;
+            
+            // رویدادهای منو
+            document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // حذف active از همه
+                    document.querySelectorAll('.nav-menu a').forEach(a => {
+                        a.classList.remove('active');
+                    });
+                    
+                    // اضافه active به لینک کلیک شده
+                    this.classList.add('active');
+                    
+                    // مخفی کردن همه بخش‌ها
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.classList.remove('active');
+                    });
+                    
+                    // نمایش بخش مورد نظر
+                    const section = this.getAttribute('data-section');
+                    document.getElementById(section + '-section').classList.add('active');
+                    
+                    // اگر بخش سفارشات است، داده‌ها را رفرش کن
+                    if (section === 'orders') {
+                        displayOrdersTable();
+                    }
+                    
+                    showNotification(`بخش ${this.textContent.trim()} نمایش داده شد`, 'info');
+                });
+            });
+            
+            // بارگذاری داده‌ها
+            loadData();
+            
+            console.log('پنل مدیریت راه‌اندازی شد');
+        });
+        
+        // ==================== مدیریت محصولات ====================
+        
         function loadData() {
             // بارگذاری محصولات
             const savedProducts = localStorage.getItem('shop_products');
@@ -646,14 +851,12 @@
             displayOrdersTable();
         }
         
-        // ذخیره محصولات
         function saveProducts() {
             localStorage.setItem('shop_products', JSON.stringify(products));
             // برای همگام‌سازی با فروشگاه اصلی
             localStorage.setItem('shop_products_main', JSON.stringify(products));
         }
         
-        // آپدیت آمار
         function updateStats() {
             document.getElementById('total-products').textContent = products.length;
             document.getElementById('sys-total-products').textContent = products.length;
@@ -663,16 +866,17 @@
             document.getElementById('total-orders').textContent = todayOrders.length;
             
             const todayRevenue = todayOrders.reduce((sum, order) => sum + (order.total || 0), 0);
-            document.getElementById('total-revenue').textContent = todayRevenue.toLocaleString();
+            document.getElementById('total-revenue').textContent = todayRevenue.toLocaleString('fa-IR');
             
-            // بازدیدها (نمونه)
-            const views = parseInt(localStorage.getItem('shop_views') || '0');
+            // بازدیدها
+            const views = parseInt(localStorage.getItem('shop_views') || Math.floor(Math.random() * 100) + 50);
             document.getElementById('total-views').textContent = views;
         }
         
-        // نمایش محصولات در جدول
         function displayProductsTable() {
             const tbody = document.getElementById('products-table-body');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             if (products.length === 0) {
@@ -697,27 +901,27 @@
                              onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop'">
                     </td>
                     <td>
-                        <strong>${product.name}</strong><br>
-                        <small style="color: #666;">${product.description.substring(0, 50)}...</small>
-                        ${product.badge ? `<span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 5px;">${product.badge}</span>` : ''}
+                        <div style="font-weight: bold; margin-bottom: 5px;">${product.name}</div>
+                        <div style="color: #666; font-size: 0.85rem;">${product.description.substring(0, 50)}...</div>
+                        ${product.badge ? `<div style="margin-top: 5px;"><span style="background: #e74c3c; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem;">${product.badge}</span></div>` : ''}
                     </td>
-                    <td><strong>${product.price.toLocaleString()}</strong></td>
+                    <td style="font-weight: bold; color: #27ae60;">${product.price.toLocaleString('fa-IR')}</td>
                     <td>
                         <span style="color: ${product.stock > 10 ? '#27ae60' : product.stock > 0 ? '#f39c12' : '#e74c3c'}; font-weight: bold;">
                             ${product.stock} عدد
                         </span>
                     </td>
                     <td>
-                        <span style="background: #f1f2f6; padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;">
+                        <span style="background: #f1f2f6; padding: 5px 12px; border-radius: 15px; font-size: 0.85rem;">
                             ${getCategoryName(product.category)}
                         </span>
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn btn-secondary" onclick="editProduct(${product.id})" style="padding: 8px 12px;">
+                            <button class="btn btn-secondary" onclick="editProduct(${product.id})" style="padding: 8px 12px; font-size: 0.85rem;">
                                 <i class="fas fa-edit"></i> ویرایش
                             </button>
-                            <button class="btn btn-danger" onclick="deleteProduct(${product.id})" style="padding: 8px 12px;">
+                            <button class="btn btn-danger" onclick="deleteProduct(${product.id})" style="padding: 8px 12px; font-size: 0.85rem;">
                                 <i class="fas fa-trash"></i> حذف
                             </button>
                         </div>
@@ -727,7 +931,6 @@
             });
         }
         
-        // نام دسته‌بندی
         function getCategoryName(category) {
             const categories = {
                 'electronics': 'الکترونیکی',
@@ -740,20 +943,26 @@
             return categories[category] || category;
         }
         
-        // افزودن/ویرایش محصول
+        // فرم افزودن/ویرایش محصول
         document.getElementById('add-product-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const product = {
                 id: currentEditId || Date.now(),
-                name: document.getElementById('product-name').value,
-                description: document.getElementById('product-description').value,
-                price: parseInt(document.getElementById('product-price').value),
+                name: document.getElementById('product-name').value.trim(),
+                description: document.getElementById('product-description').value.trim(),
+                price: parseInt(document.getElementById('product-price').value) || 0,
                 category: document.getElementById('product-category').value,
-                stock: parseInt(document.getElementById('product-stock').value),
-                image: document.getElementById('product-image').value,
+                stock: parseInt(document.getElementById('product-stock').value) || 0,
+                image: document.getElementById('product-image').value.trim(),
                 badge: document.getElementById('product-badge').value || ''
             };
+            
+            // اعتبارسنجی
+            if (!product.name || !product.description || product.price <= 0 || !product.category || product.stock < 0 || !product.image) {
+                showNotification('لطفاً همه فیلدهای لازم را پر کنید', 'error');
+                return;
+            }
             
             if (currentEditId) {
                 // ویرایش محصول موجود
@@ -776,7 +985,6 @@
             clearProductForm();
         });
         
-        // ویرایش محصول
         function editProduct(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
@@ -795,12 +1003,11 @@
             document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ویرایش محصول';
             
             // اسکرول به فرم
-            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
             
             showNotification('در حال ویرایش محصول...', 'info');
         }
         
-        // حذف محصول
         function deleteProduct(id) {
             if (!confirm('آیا از حذف این محصول اطمینان دارید؟')) return;
             
@@ -811,14 +1018,12 @@
             showNotification('محصول با موفقیت حذف شد', 'success');
         }
         
-        // پاک کردن فرم
         function clearProductForm() {
             document.getElementById('add-product-form').reset();
             currentEditId = null;
             document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ذخیره محصول';
         }
         
-        // افزودن محصول نمونه
         function addSampleProduct() {
             const sampleProducts = [
                 {
@@ -838,15 +1043,6 @@
                     stock: 30,
                     image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop",
                     badge: ""
-                },
-                {
-                    name: "زعفران درجه یک",
-                    description: "زعفران مرغوب غور، بسته‌بندی بهداشتی",
-                    price: 3200,
-                    category: "food",
-                    stock: 50,
-                    image: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=300&fit=crop",
-                    badge: "محصول محلی"
                 }
             ];
             
@@ -867,7 +1063,11 @@
         
         function displayOrdersTable() {
             const tbody = document.getElementById('orders-table-body');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
+            
+            const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
             
             if (orders.length === 0) {
                 tbody.innerHTML = `
@@ -881,25 +1081,26 @@
                 return;
             }
             
-            orders.forEach((order, index) => {
+            // نمایش سفارشات از جدید به قدیم
+            orders.reverse().forEach((order, index) => {
                 const productsList = order.items ? 
                     order.items.map(item => `${item.name} (${item.quantity} عدد)`).join('<br>') :
-                    '1 محصول';
+                    'محصولات سفارش';
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${order.id || index + 1}</td>
-                    <td>${order.date || 'تاریخ نامشخص'}</td>
-                    <td>مشتری</td>
-                    <td>${productsList}</td>
-                    <td><strong>${order.total ? order.total.toLocaleString() : '0'}</strong> افغانی</td>
+                    <td>${order.id || (orders.length - index)}</td>
+                    <td style="font-size: 0.9rem;">${order.date || 'تاریخ نامشخص'}</td>
+                    <td>مشتری آنلاین</td>
+                    <td style="font-size: 0.9rem;">${productsList}</td>
+                    <td style="font-weight: bold; color: #27ae60;">${order.total ? order.total.toLocaleString('fa-IR') : '0'}</td>
                     <td>
-                        <span style="background: #27ae60; color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;">
+                        <span style="background: #27ae60; color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.85rem;">
                             ${order.status || 'پرداخت شده'}
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-secondary" onclick="viewOrder(${order.id || index})" style="padding: 8px 12px;">
+                        <button class="btn btn-secondary" onclick="viewOrder(${order.id || index})" style="padding: 8px 12px; font-size: 0.85rem;">
                             <i class="fas fa-eye"></i> مشاهده
                         </button>
                     </td>
@@ -909,50 +1110,39 @@
         }
         
         function viewOrder(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
+            const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
+            const order = orders.find(o => o.id == orderId || o.id === orderId);
             
-            let details = `شماره سفارش: ${order.id}\n`;
-            details += `تاریخ: ${order.date}\n`;
-            details += `مبلغ کل: ${order.total ? order.total.toLocaleString() : '0'} افغانی\n`;
-            details += `وضعیت: ${order.status || 'پرداخت شده'}\n\n`;
+            if (!order) {
+                alert('سفارش یافت نشد!');
+                return;
+            }
             
-            if (order.items) {
-                details += 'محصولات:\n';
-                order.items.forEach(item => {
-                    details += `- ${item.name}: ${item.quantity} عدد (${item.price.toLocaleString()} افغانی)\n`;
+            let details = `📦 <strong>جزئیات سفارش</strong>\n`;
+            details += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+            details += `🔢 شماره سفارش: ${order.id || 'نامشخص'}\n`;
+            details += `📅 تاریخ: ${order.date || 'نامشخص'}\n`;
+            details += `💰 مبلغ کل: <strong>${order.total ? order.total.toLocaleString('fa-IR') : '0'} افغانی</strong>\n`;
+            details += `📊 وضعیت: ${order.status || 'پرداخت شده'}\n\n`;
+            
+            if (order.items && order.items.length > 0) {
+                details += `🛍️ <strong>محصولات سفارش:</strong>\n`;
+                order.items.forEach((item, index) => {
+                    details += `${index + 1}. ${item.name}\n`;
+                    details += `   └ تعداد: ${item.quantity} عدد\n`;
+                    details += `   └ قیمت واحد: ${item.price.toLocaleString('fa-IR')} افغانی\n`;
+                    details += `   └ جمع: ${(item.price * item.quantity).toLocaleString('fa-IR')} افغانی\n\n`;
                 });
             }
+            
+            details += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+            details += `✅ سفارش با موفقیت ثبت شده است`;
             
             alert(details);
         }
         
-        // ==================== سیستم ورود و خروج ====================
+        // ==================== سیستم امنیتی ====================
         
-        // نمایش نام کاربری
-        document.addEventListener('DOMContentLoaded', function() {
-            const username = sessionStorage.getItem('admin_username') || 'مدیر';
-            document.getElementById('admin-name').textContent = username;
-            document.getElementById('current-username').textContent = username;
-            
-            // تاریخ آخرین ورود
-            const lastLogin = localStorage.getItem('admin_last_login');
-            if (lastLogin) {
-                document.getElementById('last-login').textContent = lastLogin;
-            }
-            
-            // ذخیره زمان ورود فعلی
-            const now = new Date().toLocaleString('fa-IR');
-            localStorage.setItem('admin_last_login', now);
-            
-            // نمایش تاریخ جاری
-            document.getElementById('current-date').textContent = now;
-            
-            // بارگذاری داده‌ها
-            loadData();
-        });
-        
-        // بررسی قدرت رمز عبور
         function checkPasswordStrength() {
             const password = document.getElementById('new-password').value;
             const strengthBar = document.getElementById('password-strength');
@@ -980,7 +1170,6 @@
             }
         }
         
-        // تغییر رمز عبور
         function changeAdminPassword() {
             const currentPass = document.getElementById('current-password').value;
             const newPass = document.getElementById('new-password').value;
@@ -1023,11 +1212,9 @@
             document.getElementById('password-strength').className = 'password-strength';
             document.getElementById('password-strength').style.width = '0';
             
-            // اطلاع‌رسانی
             showNotification('رمز عبور با موفقیت به‌روزرسانی شد', 'success');
         }
         
-        // خروج از سیستم
         function logout() {
             if (confirm('آیا می‌خواهید از پنل مدیریت خارج شوید؟')) {
                 sessionStorage.removeItem('admin_logged_in');
@@ -1036,88 +1223,28 @@
             }
         }
         
-        // ==================== منوی ناوبری ====================
-        
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // حذف کلاس active از همه
-                document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
-                // اضافه کردن به لینک کلیک شده
-                this.classList.add('active');
-                
-                // مخفی کردن همه بخش‌ها
-                document.querySelectorAll('.card').forEach(card => {
-                    card.style.display = 'none';
-                });
-                
-                // نمایش بخش مورد نظر
-                const targetId = this.getAttribute('href').substring(1);
-                if (targetId === 'dashboard') {
-                    // نمایش همه کارت‌های داشبورد
-                    document.querySelectorAll('.card').forEach(card => {
-                        card.style.display = 'block';
-                    });
-                    document.getElementById('settings').style.display = 'none';
-                } else if (targetId === 'settings') {
-                    document.querySelectorAll('.card').forEach(card => {
-                        card.style.display = 'none';
-                    });
-                    document.getElementById('settings').style.display = 'block';
-                } else if (targetId) {
-                    const targetCard = document.getElementById(targetId);
-                    if (targetCard) {
-                        targetCard.style.display = 'block';
-                        document.getElementById('settings').style.display = 'none';
-                    }
-                }
-            });
-        });
-        
         // ==================== نوتیفیکیشن ====================
         
         function showNotification(message, type = 'success') {
-            const colors = {
-                success: '#27ae60',
-                error: '#e74c3c',
-                info: '#3498db',
-                warning: '#f39c12'
-            };
-            
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                background: ${colors[type]};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                z-index: 3000;
-                animation: slideIn 0.3s ease;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                ${message}
             `;
-            notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+            
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.remove();
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
             }, 3000);
         }
-        
-        // استایل انیمیشن
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(-100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
