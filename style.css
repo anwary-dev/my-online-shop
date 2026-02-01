@@ -508,3 +508,82 @@ footer {
 .btn-accent:hover {
     background: #219653;
 }
+
+/* به انتهای فایل style.css این استایل‌ها را اضافه کنید */
+
+/* استایل‌های اضافی برای نسخه جدید */
+.header-contact {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-contact a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+
+.header-contact a:hover {
+    color: #27ae60;
+}
+
+.promo-banner {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* استایل برای محصولات محلی */
+.product-badge[data-badge="محصول محلی"] {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+}
+
+/* استایل فرم‌ها */
+input, textarea, select {
+    font-family: inherit;
+}
+
+/* استایل دکمه‌ها */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* استایل برای موبایل */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .header-contact {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .search-box {
+        width: 100%;
+        max-width: 100%;
+        margin: 10px 0;
+    }
+    
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+}
