@@ -702,32 +702,65 @@
             </div>
 
             <!-- بخش سفارشات -->
-            <div class="section" id="orders-section">
-                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
-                    <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
-                </h2>
-                
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>شماره سفارش</th>
-                                    <th>تاریخ</th>
-                                    <th>مشتری</th>
-                                    <th>محصولات</th>
-                                    <th>مبلغ کل</th>
-                                    <th>وضعیت</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orders-table-body">
-                                <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
-                            </tbody>
-                        </table>
-                    </div>
+<div class="section" id="orders-section">
+    <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+        <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
+    </h2>
+    
+    <!-- فیلترهای سفارشات -->
+    <div class="card" style="margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button class="btn btn-secondary" onclick="filterOrders('all')" id="filter-all">
+                همه سفارشات
+            </button>
+            <button class="btn" style="background: #f39c12; color: white;" onclick="filterOrders('pending')" id="filter-pending">
+                در انتظار تأیید
+            </button>
+            <button class="btn" style="background: #3498db; color: white;" onclick="filterOrders('confirmed')" id="filter-confirmed">
+                تأیید شده
+            </button>
+            <button class="btn" style="background: #27ae60; color: white;" onclick="filterOrders('delivered')" id="filter-delivered">
+                تحویل شده
+            </button>
+        </div>
+    </div>
+    
+    <!-- لیست سفارشات -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>شماره سفارش</th>
+                        <th>تاریخ</th>
+                        <th>مشتری</th>
+                        <th>شماره تماس</th>
+                        <th>محصولات</th>
+                        <th>مبلغ کل</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- جزئیات سفارش -->
+        <div id="order-details-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-file-invoice"></i> جزئیات سفارش</h3>
+                    <button class="close-modal" onclick="closeOrderDetails()">×</button>
+                </div>
+                <div class="modal-body" id="order-details-content">
+                    <!-- جزئیات سفارش نمایش داده می‌شود -->
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
             <!-- بخش تنظیمات -->
             <div class="section" id="settings-section">
@@ -1356,3 +1389,4 @@
     </script>
 </body>
 </html>
+
