@@ -19,12 +19,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         
         .login-container {
             width: 100%;
             max-width: 400px;
-            padding: 20px;
         }
         
         .login-card {
@@ -39,19 +39,26 @@
             margin-bottom: 30px;
         }
         
+        .logo i {
+            font-size: 3.5rem;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
         .logo h2 {
             color: #2c3e50;
             font-size: 1.8rem;
+            margin-bottom: 5px;
         }
         
         .logo span {
             color: #27ae60;
         }
         
-        .logo i {
-            font-size: 3rem;
-            color: #27ae60;
-            margin-bottom: 15px;
+        .logo p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
         
         .form-group {
@@ -64,6 +71,7 @@
             margin-bottom: 8px;
             color: #2c3e50;
             font-weight: 500;
+            font-size: 0.95rem;
         }
         
         .input-with-icon {
@@ -84,12 +92,13 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border 0.3s;
+            transition: all 0.3s;
         }
         
         .input-with-icon input:focus {
             border-color: #27ae60;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
         
         .login-btn {
@@ -101,25 +110,59 @@
             border-radius: 8px;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .login-btn:hover {
             background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
         
         .login-btn:disabled {
             background: #95a5a6;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .error-message {
             color: #e74c3c;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 0.9rem;
             text-align: center;
             min-height: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(231, 76, 60, 0.1);
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            text-align: center;
+            min-height: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(39, 174, 96, 0.1);
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
         
         .remember-forgot {
@@ -134,14 +177,21 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
+            color: #555;
+        }
+        
+        .remember-forgot input[type="checkbox"] {
+            cursor: pointer;
         }
         
         .forgot-password {
             color: #3498db;
             text-decoration: none;
+            transition: color 0.3s;
         }
         
         .forgot-password:hover {
+            color: #2980b9;
             text-decoration: underline;
         }
         
@@ -158,6 +208,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: color 0.3s;
         }
         
         .back-to-store a:hover {
@@ -176,12 +227,33 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         .login-card {
             animation: fadeIn 0.5s ease;
+        }
+        
+        /* رسپانسیو */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .logo i {
+                font-size: 3rem;
+            }
+            
+            .logo h2 {
+                font-size: 1.5rem;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -191,7 +263,7 @@
             <div class="logo">
                 <i class="fas fa-user-shield"></i>
                 <h2>ورود به <span>پنل مدیریت</span></h2>
-                <p style="color: #7f8c8d; margin-top: 10px;">فروشگاه دکان آنلاین</p>
+                <p>فروشگاه دکان آنلاین - غور، افغانستان</p>
             </div>
             
             <form id="login-form">
@@ -216,12 +288,13 @@
                         <input type="checkbox" id="remember">
                         مرا به خاطر بسپار
                     </label>
-                    <a href="#" class="forgot-password" onclick="forgotPassword()">
+                    <a href="#" class="forgot-password" onclick="forgotPassword(event)">
                         فراموشی رمز عبور؟
                     </a>
                 </div>
                 
                 <div class="error-message" id="error-message"></div>
+                <div class="success-message" id="success-message"></div>
                 
                 <button type="submit" class="login-btn" id="login-btn">
                     <i class="fas fa-sign-in-alt"></i> ورود به پنل
@@ -242,116 +315,229 @@
         const DEFAULT_USERNAME = 'admin';
         const DEFAULT_PASSWORD = '123456';
         
-        // تنظیمات ذخیره‌سازی
-        function getStoredCredentials() {
-            try {
-                const stored = localStorage.getItem('admin_credentials');
-                return stored ? JSON.parse(stored) : null;
-            } catch {
-                return null;
-            }
-        }
-        
-        function saveCredentials(username, password, remember = false) {
-            if (remember) {
-                localStorage.setItem('admin_credentials', JSON.stringify({ username, password }));
-            } else {
-                localStorage.removeItem('admin_credentials');
-            }
-        }
+        // عناصر DOM
+        let loginForm;
+        let usernameInput;
+        let passwordInput;
+        let rememberCheckbox;
+        let errorMessage;
+        let successMessage;
+        let loginBtn;
         
         // بارگذاری اطلاعات ذخیره شده
         document.addEventListener('DOMContentLoaded', function() {
-            const stored = getStoredCredentials();
-            if (stored) {
-                document.getElementById('username').value = stored.username;
-                document.getElementById('password').value = stored.password;
-                document.getElementById('remember').checked = true;
-            }
+            // عناصر DOM را پیدا کن
+            loginForm = document.getElementById('login-form');
+            usernameInput = document.getElementById('username');
+            passwordInput = document.getElementById('password');
+            rememberCheckbox = document.getElementById('remember');
+            errorMessage = document.getElementById('error-message');
+            successMessage = document.getElementById('success-message');
+            loginBtn = document.getElementById('login-btn');
             
-            // تنظیم اطلاعات پیش‌فرض برای اولین بار
-            if (!localStorage.getItem('admin_setup_done')) {
-                localStorage.setItem('admin_username', DEFAULT_USERNAME);
-                localStorage.setItem('admin_password', DEFAULT_PASSWORD);
-                localStorage.setItem('admin_setup_done', 'true');
-            }
+            // بارگذاری اطلاعات ذخیره شده
+            loadSavedCredentials();
+            
+            // تنظیم رویداد فرم
+            loginForm.addEventListener('submit', handleLogin);
+            
+            // نمایش پیام خوش‌آمدگویی
+            setTimeout(() => {
+                showMessage('برای ورود از admin / 123456 استفاده کنید', 'info');
+            }, 1000);
         });
         
-        // بررسی ورود
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // بارگذاری اطلاعات ذخیره شده
+        function loadSavedCredentials() {
+            try {
+                const stored = localStorage.getItem('admin_credentials');
+                if (stored) {
+                    const credentials = JSON.parse(stored);
+                    usernameInput.value = credentials.username;
+                    passwordInput.value = credentials.password;
+                    rememberCheckbox.checked = true;
+                }
+            } catch (error) {
+                console.error('خطا در بارگذاری اطلاعات ذخیره شده:', error);
+            }
+        }
+        
+        // ذخیره اطلاعات ورود
+        function saveCredentials(username, password) {
+            try {
+                localStorage.setItem('admin_credentials', JSON.stringify({ username, password }));
+            } catch (error) {
+                console.error('خطا در ذخیره اطلاعات:', error);
+            }
+        }
+        
+        // حذف اطلاعات ذخیره شده
+        function removeCredentials() {
+            localStorage.removeItem('admin_credentials');
+        }
+        
+        // مدیریت ورود
+        async function handleLogin(event) {
+            event.preventDefault();
             
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
-            const errorElement = document.getElementById('error-message');
-            const loginBtn = document.getElementById('login-btn');
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            const remember = rememberCheckbox.checked;
             
-            // دریافت اطلاعات ذخیره شده
-            const storedUsername = localStorage.getItem('admin_username') || DEFAULT_USERNAME;
-            const storedPassword = localStorage.getItem('admin_password') || DEFAULT_PASSWORD;
+            // پاک کردن پیام‌های قبلی
+            clearMessages();
             
-            // نمایش بارگذاری
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال بررسی...';
-            loginBtn.disabled = true;
+            // اعتبارسنجی اولیه
+            if (!username || !password) {
+                showMessage('لطفاً نام کاربری و رمز عبور را وارد کنید', 'error');
+                return;
+            }
+            
+            // نمایش حالت بارگذاری
+            setLoading(true);
             
             // شبیه‌سازی تأخیر سرور
             setTimeout(() => {
-                if (username === storedUsername && password === storedPassword) {
+                // بررسی اعتبار
+                const isValid = validateCredentials(username, password);
+                
+                if (isValid) {
                     // ذخیره اطلاعات اگر کاربر خواست
-                    saveCredentials(username, password, remember);
+                    if (remember) {
+                        saveCredentials(username, password);
+                    } else {
+                        removeCredentials();
+                    }
                     
                     // ذخیره وضعیت ورود
                     sessionStorage.setItem('admin_logged_in', 'true');
                     sessionStorage.setItem('admin_username', username);
+                    sessionStorage.setItem('login_time', Date.now().toString());
                     
                     // نمایش پیام موفقیت
-                    errorElement.style.color = '#27ae60';
-                    errorElement.textContent = 'ورود موفق! در حال انتقال...';
+                    showMessage('ورود موفق! در حال انتقال...', 'success');
                     
                     // انتقال به پنل مدیریت
                     setTimeout(() => {
-                        window.location.href = 'admin.html';
-                    }, 1000);
+                        window.location.href = 'admin-panel.html';
+                    }, 1500);
                     
                 } else {
                     // نمایش خطا
-                    errorElement.style.color = '#e74c3c';
-                    errorElement.textContent = 'نام کاربری یا رمز عبور نادرست است!';
+                    showMessage('نام کاربری یا رمز عبور نادرست است!', 'error');
                     
                     // انیمیشن تکان خوردن
-                    document.getElementById('login-form').classList.add('shake');
+                    loginForm.classList.add('shake');
                     setTimeout(() => {
-                        document.getElementById('login-form').classList.remove('shake');
+                        loginForm.classList.remove('shake');
                     }, 500);
                     
                     // ریست کردن دکمه
-                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ورود به پنل';
-                    loginBtn.disabled = false;
+                    setLoading(false);
                 }
             }, 800);
-        });
-        
-        // فراموشی رمز عبور
-        function forgotPassword() {
-            const username = prompt('لطفاً نام کاربری خود را وارد کنید:');
-            if (username === DEFAULT_USERNAME) {
-                alert(`رمز عبور پیش‌فرض: ${DEFAULT_PASSWORD}\n\nپس از ورود، حتماً رمز عبور را تغییر دهید.`);
-            } else {
-                alert('نام کاربری یافت نشد!');
-            }
         }
         
-        // تغییر رمز عبور (این تابع در پنل مدیریت استفاده می‌شود)
-        function changePassword(oldPass, newPass) {
+        // بررسی اعتبار اطلاعات
+        function validateCredentials(username, password) {
+            // بررسی اطلاعات ذخیره شده در localStorage
             const storedPassword = localStorage.getItem('admin_password') || DEFAULT_PASSWORD;
             
-            if (oldPass === storedPassword) {
-                localStorage.setItem('admin_password', newPass);
-                return true;
+            // همچنین بررسی اطلاعات از admin-config.json (اگر وجود دارد)
+            try {
+                const config = localStorage.getItem('admin_config');
+                if (config) {
+                    const parsedConfig = JSON.parse(config);
+                    if (parsedConfig.password) {
+                        return username === DEFAULT_USERNAME && password === parsedConfig.password;
+                    }
+                }
+            } catch (error) {
+                console.log('استفاده از رمز ذخیره شده در localStorage');
             }
-            return false;
+            
+            return username === DEFAULT_USERNAME && password === storedPassword;
         }
+        
+        // فراموشی رمز عبور
+        function forgotPassword(event) {
+            event.preventDefault();
+            
+            const message = `
+                <strong>🔑 اطلاعات ورود پیش‌فرض:</strong><br><br>
+                👤 <strong>نام کاربری:</strong> admin<br>
+                🔒 <strong>رمز عبور:</strong> 123456<br><br>
+                
+                <strong>📝 اگر رمز را تغییر داده‌اید:</strong><br>
+                1. رمز قدیمی را وارد کنید<br>
+                2. پس از ورود، به بخش تنظیمات بروید<br>
+                3. رمز جدید را تنظیم کنید<br><br>
+                
+                <strong>⚠️ نکته مهم:</strong><br>
+                رمز عبور فقط در این مرورگر ذخیره می‌شود.<br>
+                برای استفاده در سایر دستگاه‌ها باید رمز را به خاطر بسپارید.
+            `;
+            
+            showMessage(message, 'info');
+        }
+        
+        // نمایش پیام
+        function showMessage(message, type = 'info') {
+            clearMessages();
+            
+            if (type === 'error') {
+                errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                errorMessage.classList.add('show');
+            } else if (type === 'success') {
+                successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                successMessage.classList.add('show');
+            } else {
+                // پیام اطلاعاتی
+                errorMessage.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+                errorMessage.classList.add('show');
+            }
+        }
+        
+        // پاک کردن پیام‌ها
+        function clearMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+            errorMessage.innerHTML = '';
+            successMessage.innerHTML = '';
+        }
+        
+        // تنظیم حالت بارگذاری
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال بررسی...';
+                loginBtn.disabled = true;
+            } else {
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ورود به پنل';
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // بارگذاری تنظیمات از فایل config
+        async function loadConfigFromFile() {
+            try {
+                const response = await fetch('admin-config.json?t=' + Date.now());
+                if (response.ok) {
+                    const config = await response.json();
+                    localStorage.setItem('admin_config', JSON.stringify(config));
+                    return config;
+                }
+            } catch (error) {
+                console.log('فایل config یافت نشد، از تنظیمات محلی استفاده می‌شود');
+            }
+            return null;
+        }
+        
+        // تلاش برای بارگذاری تنظیمات
+        loadConfigFromFile().then(config => {
+            if (config) {
+                console.log('تنظیمات از فایل بارگذاری شد');
+            }
+        });
     </script>
 </body>
 </html>
