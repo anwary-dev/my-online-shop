@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+    <meta name="description" content="فروشگاه آنلاین دکان - بهترین محصولات با قیمت مناسب در افغانستان">
+    <meta name="keywords" content="فروشگاه آنلاین, خرید اینترنتی, افغانستان, غور, دکان آنلاین">
+    <meta name="author" content="دکان آنلاین">
 </head>
 <body>
     <!-- هدر -->
@@ -15,6 +18,7 @@
             <div class="logo">
                 <i class="fas fa-store"></i>
                 <h1>دکان<span>آنلاین</span></h1>
+                <small style="font-size: 0.8rem; color: #ddd; margin-right: 10px;">غور، افغانستان</small>
             </div>
             
             <!-- نوار جستجو -->
@@ -29,24 +33,32 @@
                 </div>
             </div>
             
-            <nav>
-                <ul>
-                    <li><a href="#home"><i class="fas fa-home"></i> خانه</a></li>
-                    <li><a href="#products"><i class="fas fa-box-open"></i> محصولات</a></li>
-                    <li><a href="#about"><i class="fas fa-info-circle"></i> درباره</a></li>
-                    <li><a href="#contact"><i class="fas fa-phone"></i> تماس</a></li>
-                </ul>
-            </nav>
+            <!-- اطلاعات تماس در هدر -->
+            <div class="header-contact" style="display: flex; align-items: center; gap: 15px;">
+                <a href="tel:0797877773" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-phone"></i>
+                    <span style="font-size: 0.9rem;">0797877773</span>
+                </a>
+                <a href="admin.html" style="color: #27ae60; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-user-shield"></i>
+                    <span style="font-size: 0.9rem;">مدیریت</span>
+                </a>
+            </div>
         </div>
     </header>
 
     <!-- بنر اصلی -->
     <section class="hero" id="home">
         <h2>به دکان آنلاین خوش آمدید</h2>
-        <p>با بهترین قیمت‌ها و کیفیت عالی خرید کنید | تحویل سریع در سراسر افغانستان</p>
-        <button class="btn btn-accent" onclick="scrollToProducts()">
-            <i class="fas fa-shopping-bag"></i> شروع خرید
-        </button>
+        <p>ارائه بهترین محصولات با مناسب‌ترین قیمت‌ها | تحویل سریع در سراسر افغانستان</p>
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+            <button class="btn btn-accent" onclick="scrollToProducts()">
+                <i class="fas fa-shopping-bag"></i> شروع خرید
+            </button>
+            <a href="#contact" class="btn" style="background: #3498db; text-decoration: none;">
+                <i class="fas fa-phone"></i> تماس با ما
+            </a>
+        </div>
     </section>
 
     <!-- بخش اصلی -->
@@ -58,6 +70,7 @@
             <button class="category-btn" data-category="clothing">پوشاک</button>
             <button class="category-btn" data-category="home">لوازم خانه</button>
             <button class="category-btn" data-category="sports">ورزشی</button>
+            <button class="category-btn" data-category="food">مواد غذایی</button>
         </div>
 
         <!-- عنوان محصولات -->
@@ -66,6 +79,15 @@
         <!-- لیست محصولات -->
         <div class="products-grid" id="products-container">
             <!-- محصولات به صورت داینامیک اضافه می‌شوند -->
+        </div>
+
+        <!-- تبلیغ ویژه -->
+        <div class="promo-banner" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%); color: white; padding: 30px; border-radius: 15px; margin: 50px 0; text-align: center;">
+            <h3><i class="fas fa-gift"></i> تخفیف‌های ویژه!</h3>
+            <p>تا ۳۰٪ تخفیف بر روی محصولات منتخب | فقط تا پایان این هفته</p>
+            <button class="btn" style="background: white; color: #FF6B6B; margin-top: 15px;" onclick="showPromoProducts()">
+                مشاهده محصولات تخفیف‌دار
+            </button>
         </div>
     </main>
 
@@ -99,69 +121,293 @@
         <div class="container">
             <h2 class="section-title">درباره دکان آنلاین</h2>
             <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
-                    ما در <strong>دکان آنلاین</strong> با هدف ارائه بهترین محصولات با مناسب‌ترین قیمت‌ها فعالیت می‌کنیم. 
-                    تمامی کالاهای ما دارای گارانتی اصالت و کیفیت هستند و در سریع‌ترین زمان ممکن به دست شما می‌رسند.
-                </p>
+                <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+                        <strong>دکان آنلاین</strong> یک فروشگاه اینترنتی مبتنی در ولایت غور، افغانستان است که با هدف ارائه بهترین محصولات با مناسب‌ترین قیمت‌ها فعالیت می‌کند. 
+                        ما به کیفیت کالاها و رضایت مشتریان خود اهمیت ویژه‌ای می‌دهیم و تضمین می‌کنیم که تمامی محصولات دارای اصالت و کیفیت می‌باشند.
+                    </p>
+                </div>
                 <div style="display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
                     <div style="text-align: center;">
-                        <i class="fas fa-shipping-fast" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 15px;"></i>
+                        <i class="fas fa-shipping-fast" style="font-size: 2.5rem; color: #27ae60; margin-bottom: 15px;"></i>
                         <h3>تحویل سریع</h3>
-                        <p>در سراسر افغانستان</p>
+                        <p>ارسال به تمام ولایات افغانستان</p>
                     </div>
                     <div style="text-align: center;">
-                        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 15px;"></i>
+                        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #27ae60; margin-bottom: 15px;"></i>
                         <h3>گارانتی اصالت</h3>
-                        <p>تمام محصولات</p>
+                        <p>تضمین کیفیت محصولات</p>
                     </div>
                     <div style="text-align: center;">
-                        <i class="fas fa-headset" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 15px;"></i>
-                        <h3>پشتیبانی 24/7</h3>
-                        <p>همیشه در دسترس</p>
+                        <i class="fas fa-headset" style="font-size: 2.5rem; color: #27ae60; margin-bottom: 15px;"></i>
+                        <h3>پشتیبانی</h3>
+                        <p>پاسخگویی ۲۴ ساعته</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <i class="fas fa-hand-holding-usd" style="font-size: 2.5rem; color: #27ae60; margin-bottom: 15px;"></i>
+                        <h3>پرداخت امن</h3>
+                        <p>سیستم پرداخت مطمئن</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- تماس با ما -->
+    <section style="background: #2c3e50; color: white; padding: 60px 20px;" id="contact">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">تماس با ما</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1000px; margin: 0 auto;">
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: #27ae60; margin-bottom: 20px;"><i class="fas fa-map-marker-alt"></i> آدرس ما</h3>
+                    <p style="line-height: 1.8;">
+                        <i class="fas fa-building" style="margin-left: 10px;"></i>
+                        ولایت غور، افغانستان<br>
+                        <i class="fas fa-road" style="margin-left: 10px;"></i>
+                        مرکز شهر، جاده اصلی<br>
+                        <i class="fas fa-store" style="margin-left: 10px;"></i>
+                        فروشگاه دکان آنلاین
+                    </p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: #27ae60; margin-bottom: 20px;"><i class="fas fa-address-book"></i> راه‌های ارتباطی</h3>
+                    <p style="line-height: 1.8;">
+                        <i class="fas fa-phone" style="margin-left: 10px;"></i>
+                        تلفن: <a href="tel:0797877773" style="color: white; text-decoration: none;">۰۷۹۷۸۷۷۷۷۳</a><br>
+                        
+                        <i class="fas fa-envelope" style="margin-left: 10px;"></i>
+                        ایمیل: <a href="mailto:anwary.dev@gmail.com" style="color: white; text-decoration: none;">anwary.dev@gmail.com</a><br>
+                        
+                        <i class="fas fa-clock" style="margin-left: 10px;"></i>
+                        ساعت کاری: ۸ صبح تا ۸ شب<br>
+                        
+                        <i class="fas fa-calendar-alt" style="margin-left: 10px;"></i>
+                        روزهای کاری: شنبه تا پنجشنبه
+                    </p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: #27ae60; margin-bottom: 20px;"><i class="fas fa-comments"></i> پیام سریع</h3>
+                    <form id="quick-contact" onsubmit="sendQuickMessage(event)">
+                        <div style="margin-bottom: 15px;">
+                            <input type="text" placeholder="نام شما" required 
+                                   style="width: 100%; padding: 10px; border-radius: 6px; border: none;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <textarea placeholder="پیام شما" rows="3" required 
+                                      style="width: 100%; padding: 10px; border-radius: 6px; border: none;"></textarea>
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> ارسال پیام
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- فوتر -->
-    <footer id="contact">
+    <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>درباره ما</h3>
-                <p>فروشگاه آنلاین با بیش از 5 سال سابقه در زمینه فروش کالاهای با کیفیت در افغانستان.</p>
+                <h3>دکان آنلاین</h3>
+                <p>فروشگاه اینترنتی با بیش از ۵ سال سابقه در ارائه بهترین محصولات به مردم غور و سراسر افغانستان.</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://telegram.org" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a href="https://wa.me/93797877773" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>لینک‌های سریع</h3>
                 <ul>
-                    <li><a href="#home">خانه</a></li>
-                    <li><a href="#products">محصولات</a></li>
-                    <li><a href="#about">درباره ما</a></li>
-                    <li><a href="#contact">تماس با ما</a></li>
+                    <li><a href="#home"><i class="fas fa-home"></i> خانه</a></li>
+                    <li><a href="#products"><i class="fas fa-box-open"></i> محصولات</a></li>
+                    <li><a href="#about"><i class="fas fa-info-circle"></i> درباره ما</a></li>
+                    <li><a href="#contact"><i class="fas fa-phone"></i> تماس با ما</a></li>
+                    <li><a href="admin.html" target="_blank"><i class="fas fa-user-shield"></i> پنل مدیریت</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>تماس با ما</h3>
+                <h3>خدمات مشتریان</h3>
                 <ul>
-                    <li><i class="fas fa-phone"></i> ۰۷۸۰۱۲۳۴۵۶</li>
-                    <li><i class="fas fa-envelope"></i> info@dukanaonline.af</li>
-                    <li><i class="fas fa-map-marker-alt"></i> کابل، افغانستان</li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> راهنمای خرید</a></li>
+                    <li><a href="#"><i class="fas fa-truck"></i> شرایط ارسال</a></li>
+                    <li><a href="#"><i class="fas fa-exchange-alt"></i> بازگرداندن کالا</a></li>
+                    <li><a href="#"><i class="fas fa-file-contract"></i> حریم خصوصی</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> قوانین و مقررات</a></li>
                 </ul>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="footer-section">
+                <h3>عضویت در خبرنامه</h3>
+                <p>برای دریافت جدیدترین تخفیف‌ها و محصولات، ایمیل خود را وارد کنید:</p>
+                <div style="margin-top: 15px;">
+                    <input type="email" placeholder="ایمیل شما" 
+                           style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 10px;">
+                    <button class="btn" style="width: 100%;">
+                        <i class="fas fa-envelope"></i> عضویت
+                    </button>
                 </div>
             </div>
         </div>
         <div class="copyright">
-            <p>© ۱۴۰۲ دکان آنلاین - تمامی حقوق محفوظ است</p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">این سایت یک پروژه آموزشی است</p>
+            <p>© ۱۴۰۴ تمامی حقوق برای <strong>دکان آنلاین</strong> محفوظ است | ولایت غور، افغانستان</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #aaa;">
+                شماره تماس: ۰۷۹۷۸۷۷۷۷۳ | ایمیل: anwary.dev@gmail.com
+                <br>
+                این سایت با افتخار در افغانستان طراحی شده است
+            </p>
         </div>
     </footer>
 
     <!-- اسکریپت‌ها -->
     <script src="script.js"></script>
+    <script>
+        // تابع اضافی برای نمایش محصولات تخفیف‌دار
+        function showPromoProducts() {
+            const promoProducts = products.filter(p => p.badge === 'تخفیف');
+            if (promoProducts.length > 0) {
+                currentCategory = 'all';
+                displayProducts(promoProducts);
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                showNotification('محصولات تخفیف‌دار نمایش داده شدند', 'info');
+            } else {
+                showNotification('در حال حاضر محصول تخفیف‌دار موجود نیست', 'info');
+            }
+        }
+
+        // تابع ارسال پیام سریع
+        function sendQuickMessage(event) {
+            event.preventDefault();
+            const form = event.target;
+            const name = form.querySelector('input').value;
+            const message = form.querySelector('textarea').value;
+            
+            // در نسخه واقعی، این اطلاعات به سرور ارسال می‌شود
+            alert(`پیام شما ارسال شد!\n\nنام: ${name}\nپیام: ${message}\n\nبه زودی با شما تماس خواهیم گرفت.`);
+            form.reset();
+            showNotification('پیام شما با موفقیت ارسال شد', 'success');
+        }
+
+        // بارگذاری محصولات با اطلاعات غور
+        document.addEventListener('DOMContentLoaded', function() {
+            // اضافه کردن محصولات مخصوص منطقه غور
+            const localProducts = [
+                {
+                    id: 100,
+                    name: "قالین دستباف غوری",
+                    description: "قالین دستباف سنتی غور، کیفیت عالی، طرح‌های اصیل",
+                    price: 8500,
+                    category: "home",
+                    stock: 12,
+                    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+                    badge: "محصول محلی"
+                },
+                {
+                    id: 101,
+                    name: "زعفران غور",
+                    description: "زعفران مرغوب غور، درجه یک، بسته‌بندی بهداشتی",
+                    price: 3200,
+                    category: "food",
+                    stock: 25,
+                    image: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=300&fit=crop",
+                    badge: "پرفروش"
+                },
+                {
+                    id: 102,
+                    name: "پوستین گرم",
+                    description: "پوستین گرم مخصوص زمستان‌های سرد غور",
+                    price: 12500,
+                    category: "clothing",
+                    stock: 8,
+                    image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=300&fit=crop",
+                    badge: "جدید"
+                }
+            ];
+
+            // اضافه کردن محصولات محلی به لیست محصولات
+            localProducts.forEach(product => {
+                const exists = products.some(p => p.id === product.id);
+                if (!exists) {
+                    products.push(product);
+                }
+            });
+
+            // ذخیره محصولات به‌روزشده
+            saveToStorage();
+            
+            // نمایش اعلان خوش‌آمدگویی
+            setTimeout(() => {
+                showNotification('خوش آمدید به دکان آنلاین غور! 🎉', 'success');
+            }, 1000);
+        });
+
+        // تابع نمایش محصولات با فیلتر
+        function displayProducts(productList = null) {
+            const container = document.getElementById('products-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const productsToShow = productList || (currentCategory === 'all' 
+                ? products 
+                : products.filter(p => p.category === currentCategory));
+            
+            if (productsToShow.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3 style="color: #666;">محصولی یافت نشد</h3>
+                        <button class="btn" onclick="currentCategory='all'; displayProducts();" style="margin-top: 20px;">
+                            مشاهده همه محصولات
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            productsToShow.forEach(product => {
+                const productCard = `
+                    <div class="product-card" data-category="${product.category}">
+                        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                        <img src="${product.image}" alt="${product.name}" class="product-image" 
+                             onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop'">
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <p class="product-desc">${product.description}</p>
+                            <div class="product-stock" style="font-size: 0.9rem; color: ${product.stock > 10 ? '#27ae60' : product.stock > 0 ? '#f39c12' : '#e74c3c'}; margin-bottom: 10px;">
+                                <i class="fas fa-cubes"></i> موجودی: ${product.stock} عدد
+                            </div>
+                            <div class="product-price">
+                                <div>
+                                    <span class="price">${product.price.toLocaleString('fa-IR')}</span>
+                                    <span class="price-currency">افغانی</span>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                    <i class="fas fa-cart-plus"></i> ${product.stock === 0 ? 'ناموجود' : 'افزودن'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += productCard;
+            });
+        }
+
+        // تابع برای اسکرول به محصولات
+        function scrollToProducts() {
+            const productsSection = document.getElementById('products');
+            if (productsSection) {
+                productsSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+    </script>
 </body>
 </html>
