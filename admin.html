@@ -16,6 +16,7 @@
         body {
             background: #f5f7fa;
             color: #333;
+            overflow-x: hidden;
         }
         
         .admin-container {
@@ -33,6 +34,7 @@
             height: 100vh;
             overflow-y: auto;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
         }
         
         .logo {
@@ -44,6 +46,13 @@
         .logo h2 {
             color: #27ae60;
             font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 5px;
         }
         
         .nav-menu {
@@ -65,9 +74,13 @@
             border-right: 3px solid transparent;
         }
         
-        .nav-menu a:hover,
-        .nav-menu a.active {
+        .nav-menu a:hover {
             background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-menu a.active {
+            background: rgba(255,255,255,0.15);
             color: white;
             border-right: 3px solid #27ae60;
         }
@@ -85,6 +98,7 @@
             margin-right: 250px;
             padding: 20px;
             width: calc(100% - 250px);
+            min-height: 100vh;
         }
         
         .header {
@@ -96,6 +110,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .header h1 {
@@ -120,6 +136,7 @@
         .btn:hover {
             background: #219653;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .btn-secondary {
@@ -138,19 +155,23 @@
             background: #c0392b;
         }
         
-        /* فرم‌ها */
+        /* بخش‌های اصلی */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        /* کارت‌ها */
         .card {
             background: white;
             border-radius: 10px;
             padding: 25px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            display: none;
-        }
-        
-        .card.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
         }
         
         .form-group {
@@ -179,19 +200,18 @@
             box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
         
-        /* جدول محصولات */
+        /* جدول‌ها */
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-width: 800px;
         }
         
         th {
@@ -200,6 +220,7 @@
             padding: 15px;
             text-align: right;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         td {
@@ -214,7 +235,7 @@
         
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         
         /* آمار */
@@ -256,8 +277,8 @@
             font-size: 0.9rem;
         }
         
-        /* استایل برای تغییر رمز عبور */
-        .change-password-form {
+        /* تنظیمات رمز عبور */
+        .password-form {
             background: #f8f9fa;
             padding: 25px;
             border-radius: 10px;
@@ -276,7 +297,7 @@
         .medium { background: #f39c12; width: 60%; }
         .strong { background: #27ae60; width: 100%; }
         
-        /* استایل برای خروج */
+        /* دکمه خروج */
         .logout-btn {
             background: #e74c3c;
             color: white;
@@ -295,94 +316,6 @@
             background: #c0392b;
         }
         
-        /* رسپانسیو */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .logo h2,
-            .nav-menu span {
-                display: none;
-            }
-            
-            .main-content {
-                margin-right: 70px;
-                width: calc(100% - 70px);
-            }
-            
-            .nav-menu a {
-                padding: 15px 0;
-                justify-content: center;
-            }
-            
-            .nav-menu i {
-                margin: 0;
-                font-size: 1.2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .admin-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            
-            .nav-menu {
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-                padding: 10px;
-            }
-            
-            .nav-menu li {
-                flex: 1;
-                min-width: 70px;
-            }
-            
-            .main-content {
-                margin-right: 0;
-                width: 100%;
-                padding: 15px;
-            }
-            
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-        
-        /* انیمیشن‌ها */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
         /* نوتیفیکیشن */
         .notification {
             position: fixed;
@@ -390,7 +323,7 @@
             left: 20px;
             padding: 15px 20px;
             border-radius: 8px;
-            z-index: 3000;
+            z-index: 1000;
             animation: slideIn 0.3s ease;
             display: flex;
             align-items: center;
@@ -418,21 +351,132 @@
             background: #f39c12;
             color: white;
         }
+        
+        /* رسپانسیو */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .logo h2,
+            .nav-menu span {
+                display: none;
+            }
+            
+            .main-content {
+                margin-right: 70px;
+                width: calc(100% - 70px);
+                padding: 15px;
+            }
+            
+            .nav-menu a {
+                padding: 15px 0;
+                justify-content: center;
+            }
+            
+            .nav-menu i {
+                margin: 0;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 10px 0;
+            }
+            
+            .nav-menu {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                padding: 10px;
+                gap: 5px;
+            }
+            
+            .nav-menu li {
+                flex: 1;
+                min-width: 60px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <!-- بررسی وضعیت ورود -->
     <script>
         // بررسی آیا کاربر وارد شده است
-        if (!sessionStorage.getItem('admin_logged_in')) {
-            window.location.href = 'login.html';
+        function checkAuth() {
+            const loggedIn = sessionStorage.getItem('admin_logged_in');
+            const loginTime = sessionStorage.getItem('login_time');
+            
+            if (!loggedIn || !loginTime) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            // بررسی زمان (30 دقیقه)
+            const timeDiff = Date.now() - parseInt(loginTime);
+            if (timeDiff > 30 * 60 * 1000) {
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            return true;
         }
         
-        // زمان‌بندی خروج خودکار پس از 30 دقیقه
-        setTimeout(() => {
-            sessionStorage.removeItem('admin_logged_in');
-            window.location.href = 'login.html';
-        }, 30 * 60 * 1000);
+        // بررسی اولیه
+        if (!checkAuth()) {
+            // ریدایرکت انجام می‌شود
+        }
+        
+        // بررسی دوره‌ای هر 5 دقیقه
+        setInterval(checkAuth, 5 * 60 * 1000);
     </script>
     
     <div class="admin-container">
@@ -440,9 +484,7 @@
         <aside class="sidebar">
             <div class="logo">
                 <h2><i class="fas fa-cogs"></i> مدیریت</h2>
-                <p style="font-size: 0.8rem; color: #aaa; margin-top: 5px;" id="admin-name">
-                    <!-- نام کاربری نمایش داده می‌شود -->
-                </p>
+                <p id="admin-name">در حال بارگذاری...</p>
             </div>
             <ul class="nav-menu">
                 <li><a href="#dashboard" class="active" data-section="dashboard">
@@ -457,8 +499,8 @@
                 <li><a href="#settings" data-section="settings">
                     <i class="fas fa-cog"></i> <span>تنظیمات</span>
                 </a></li>
-                <li><a href="../index.html" target="_blank">
-                    <i class="fas fa-store"></i> <span>مشاهده فروشگاه</span>
+                <li><a href="index.html" target="_blank">
+                    <i class="fas fa-store"></i> <span>فروشگاه</span>
                 </a></li>
                 <li><a href="#" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> <span>خروج</span>
@@ -472,18 +514,20 @@
             <div class="header">
                 <div>
                     <h1><i class="fas fa-tachometer-alt"></i> پنل مدیریت دکان آنلاین</h1>
-                    <p style="color: #666; margin-top: 5px; font-size: 0.9rem;">ولایت غور، افغانستان</p>
+                    <p style="color: #666; margin-top: 5px; font-size: 0.9rem;" id="current-date">
+                        <!-- تاریخ نمایش داده می‌شود -->
+                    </p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <span id="current-date" style="color: #666; font-size: 0.9rem;"></span>
+                    <span id="welcome-message" style="color: #666; font-size: 0.9rem;"></span>
                     <button class="logout-btn" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> خروج
                     </button>
                 </div>
             </div>
 
-            <!-- داشبورد -->
-            <div class="card active" id="dashboard-section">
+            <!-- بخش داشبورد -->
+            <div class="section active" id="dashboard-section">
                 <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-tachometer-alt"></i> داشبورد مدیریت
                 </h2>
@@ -509,7 +553,7 @@
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
                         <div class="stat-number" id="total-revenue">0</div>
-                        <div class="stat-label">درآمد امروز (افغانی)</div>
+                        <div class="stat-label">درآمد امروز</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
@@ -521,57 +565,66 @@
                 </div>
                 
                 <!-- راهنما -->
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px;">
+                <div class="card">
                     <h3 style="color: #2c3e50; margin-bottom: 15px;">
                         <i class="fas fa-info-circle"></i> راهنمای سریع
                     </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-plus-circle" style="color: #27ae60; font-size: 1.2rem;"></i>
-                            <span>برای افزودن محصول جدید به بخش "محصولات" بروید</span>
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-plus-circle" style="color: #27ae60; font-size: 1.2rem; margin-top: 3px;"></i>
+                            <div>
+                                <strong>افزودن محصول</strong>
+                                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">برای افزودن محصول جدید به بخش "محصولات" بروید</p>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-shopping-cart" style="color: #3498db; font-size: 1.2rem;"></i>
-                            <span>سفارشات مشتریان در بخش "سفارشات" نمایش داده می‌شود</span>
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-shopping-cart" style="color: #3498db; font-size: 1.2rem; margin-top: 3px;"></i>
+                            <div>
+                                <strong>مدیریت سفارشات</strong>
+                                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">سفارشات مشتریان در بخش "سفارشات" نمایش داده می‌شود</p>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-key" style="color: #e74c3c; font-size: 1.2rem;"></i>
-                            <span>رمز عبور خود را در بخش "تنظیمات" تغییر دهید</span>
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-key" style="color: #e74c3c; font-size: 1.2rem; margin-top: 3px;"></i>
+                            <div>
+                                <strong>تغییر رمز عبور</strong>
+                                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">رمز عبور خود را در بخش "تنظیمات" تغییر دهید</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- بخش محصولات -->
-            <div class="card" id="products-section">
+            <div class="section" id="products-section">
                 <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-box-open"></i> مدیریت محصولات
                 </h2>
                 
                 <!-- فرم افزودن محصول -->
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                <div class="card">
                     <h3 style="color: #2c3e50; margin-bottom: 20px;">
                         <i class="fas fa-plus-circle"></i> افزودن محصول جدید
                     </h3>
                     
                     <form id="add-product-form">
                         <div class="form-group">
-                            <label for="product-name"><i class="fas fa-tag"></i> نام محصول:</label>
+                            <label for="product-name">نام محصول:</label>
                             <input type="text" id="product-name" class="form-control" placeholder="مثال: گوشی سامسونگ" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-description"><i class="fas fa-align-left"></i> توضیحات:</label>
+                            <label for="product-description">توضیحات:</label>
                             <textarea id="product-description" class="form-control" rows="3" placeholder="توضیحات محصول..." required></textarea>
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-price"><i class="fas fa-money-bill-wave"></i> قیمت (افغانی):</label>
+                            <label for="product-price">قیمت (افغانی):</label>
                             <input type="number" id="product-price" class="form-control" placeholder="مثال: 25000" min="0" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-category"><i class="fas fa-folder"></i> دسته‌بندی:</label>
+                            <label for="product-category">دسته‌بندی:</label>
                             <select id="product-category" class="form-control" required>
                                 <option value="">انتخاب کنید</option>
                                 <option value="electronics">الکترونیکی</option>
@@ -584,12 +637,12 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-stock"><i class="fas fa-cubes"></i> موجودی:</label>
+                            <label for="product-stock">موجودی:</label>
                             <input type="number" id="product-stock" class="form-control" placeholder="تعداد در انبار" min="0" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-image"><i class="fas fa-image"></i> آدرس تصویر:</label>
+                            <label for="product-image">آدرس تصویر:</label>
                             <input type="url" id="product-image" class="form-control" placeholder="https://example.com/image.jpg" required>
                             <small style="color: #666; display: block; margin-top: 5px;">
                                 می‌توانید از <a href="https://unsplash.com" target="_blank" style="color: #3498db;">Unsplash.com</a> آدرس عکس بگیرید
@@ -597,7 +650,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="product-badge"><i class="fas fa-certificate"></i> برچسب:</label>
+                            <label for="product-badge">برچسب:</label>
                             <select id="product-badge" class="form-control">
                                 <option value="">بدون برچسب</option>
                                 <option value="جدید">جدید</option>
@@ -622,119 +675,120 @@
                 </div>
                 
                 <!-- لیست محصولات -->
-                <h3 style="color: #2c3e50; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #eee;">
-                    <i class="fas fa-list"></i> لیست محصولات
-                </h3>
-                
-                <div class="table-container">
-                    <table id="products-table">
-                        <thead>
-                            <tr>
-                                <th>شماره</th>
-                                <th>تصویر</th>
-                                <th>نام محصول</th>
-                                <th>قیمت (افغانی)</th>
-                                <th>موجودی</th>
-                                <th>دسته‌بندی</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-table-body">
-                            <!-- محصولات به صورت داینامیک اضافه می‌شوند -->
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                        <i class="fas fa-list"></i> لیست محصولات
+                    </h3>
+                    
+                    <div class="table-container">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>شماره</th>
+                                    <th>تصویر</th>
+                                    <th>نام محصول</th>
+                                    <th>قیمت (افغانی)</th>
+                                    <th>موجودی</th>
+                                    <th>دسته‌بندی</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body">
+                                <!-- محصولات به صورت داینامیک اضافه می‌شوند -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- بخش سفارشات -->
-            <div class="card" id="orders-section">
+            <div class="section" id="orders-section">
                 <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
                 </h2>
                 
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>شماره سفارش</th>
-                                <th>تاریخ</th>
-                                <th>مشتری</th>
-                                <th>محصولات</th>
-                                <th>مبلغ کل</th>
-                                <th>وضعیت</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="orders-table-body">
-                            <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>شماره سفارش</th>
+                                    <th>تاریخ</th>
+                                    <th>مشتری</th>
+                                    <th>محصولات</th>
+                                    <th>مبلغ کل</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- بخش تنظیمات -->
-            <div class="card" id="settings-section">
+            <div class="section" id="settings-section">
                 <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
                     <i class="fas fa-cog"></i> تنظیمات سیستم
                 </h2>
                 
                 <!-- تغییر رمز عبور -->
-                <div class="change-password-form">
-                    <h3 style="color: #2c3e50; margin-bottom: 20px;">
-                        <i class="fas fa-key"></i> تغییر رمز عبور
-                    </h3>
-                    
-                    <div class="form-group">
-                        <label for="current-password">رمز عبور فعلی:</label>
-                        <input type="password" id="current-password" class="form-control" placeholder="رمز عبور فعلی را وارد کنید">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="new-password">رمز عبور جدید:</label>
-                        <input type="password" id="new-password" class="form-control" placeholder="رمز عبور جدید را وارد کنید" oninput="checkPasswordStrength()">
-                        <div id="password-strength" class="password-strength"></div>
-                        <small style="color: #666; display: block; margin-top: 5px;">
-                            رمز عبور باید حداقل ۶ کاراکتر و شامل حروف و اعداد باشد
-                        </small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="confirm-password">تکرار رمز عبور جدید:</label>
-                        <input type="password" id="confirm-password" class="form-control" placeholder="رمز عبور جدید را تکرار کنید">
-                    </div>
-                    
-                    <button class="btn" onclick="changeAdminPassword()">
-                        <i class="fas fa-save"></i> تغییر رمز عبور
-                    </button>
-                    
-                    <div id="password-message" style="margin-top: 15px;"></div>
-                </div>
-                
-                <!-- اطلاعات سیستم -->
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
-                    <h3 style="color: #2c3e50; margin-bottom: 15px;">
-                        <i class="fas fa-info-circle"></i> اطلاعات سیستم
-                    </h3>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نام کاربری فعلی</div>
-                            <div id="current-username" style="color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+                <div class="card">
+                    <div class="password-form">
+                        <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                            <i class="fas fa-key"></i> تغییر رمز عبور
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="current-password">رمز عبور فعلی:</label>
+                            <input type="password" id="current-password" class="form-control" placeholder="رمز عبور فعلی را وارد کنید">
                         </div>
                         
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">آخرین ورود</div>
-                            <div id="last-login" style="color: #666; margin-top: 5px; font-size: 0.9rem;"></div>
+                        <div class="form-group">
+                            <label for="new-password">رمز عبور جدید:</label>
+                            <input type="password" id="new-password" class="form-control" placeholder="رمز عبور جدید را وارد کنید" oninput="checkPasswordStrength()">
+                            <div id="password-strength" class="password-strength"></div>
+                            <small style="color: #666; display: block; margin-top: 5px;">
+                                رمز عبور باید حداقل ۶ کاراکتر و شامل حروف و اعداد باشد
+                            </small>
                         </div>
                         
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نسخه سیستم</div>
-                            <div style="color: #666; margin-top: 5px; font-weight: bold;">2.0.0</div>
+                        <div class="form-group">
+                            <label for="confirm-password">تکرار رمز عبور جدید:</label>
+                            <input type="password" id="confirm-password" class="form-control" placeholder="رمز عبور جدید را تکرار کنید">
                         </div>
                         
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">تعداد محصولات</div>
-                            <div id="sys-total-products" style="color: #27ae60; font-weight: bold; margin-top: 5px;">0</div>
+                        <button class="btn" onclick="changeAdminPassword()">
+                            <i class="fas fa-save"></i> تغییر رمز عبور
+                        </button>
+                        
+                        <div id="password-message" style="margin-top: 15px;"></div>
+                    </div>
+                    
+                    <!-- اطلاعات سیستم -->
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> اطلاعات سیستم
+                        </h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نام کاربری</div>
+                                <div id="current-username" style="color: #27ae60; font-weight: bold; margin-top: 5px;">admin</div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">آخرین ورود</div>
+                                <div id="last-login" style="color: #666; margin-top: 5px; font-size: 0.9rem;">-</div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #2c3e50; font-size: 0.9rem;">نسخه سیستم</div>
+                                <div style="color: #666; margin-top: 5px; font-weight: bold;">2.0.0</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -743,7 +797,7 @@
     </div>
 
     <script>
-        // ==================== متغیرهای全局 ====================
+        // ==================== متغیرهای عمومی ====================
         let products = [];
         let orders = [];
         let currentEditId = null;
@@ -753,25 +807,53 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('پنل مدیریت در حال راه‌اندازی...');
             
-            // نمایش نام کاربری
+            // نمایش اطلاعات کاربر
+            displayUserInfo();
+            
+            // تنظیم تاریخ جاری
+            updateCurrentDate();
+            
+            // رویدادهای منو
+            setupMenuNavigation();
+            
+            // بارگذاری داده‌ها
+            loadData();
+            
+            // تنظیم فرم محصولات
+            setupProductForm();
+            
+            console.log('پنل مدیریت راه‌اندازی شد');
+        });
+        
+        // نمایش اطلاعات کاربر
+        function displayUserInfo() {
             const username = sessionStorage.getItem('admin_username') || 'مدیر';
             document.getElementById('admin-name').textContent = username;
             document.getElementById('current-username').textContent = username;
+            document.getElementById('welcome-message').textContent = `خوش آمدید ${username}`;
             
             // تاریخ آخرین ورود
-            const lastLogin = localStorage.getItem('admin_last_login');
-            if (lastLogin) {
-                document.getElementById('last-login').textContent = lastLogin;
+            const loginTime = sessionStorage.getItem('login_time');
+            if (loginTime) {
+                const date = new Date(parseInt(loginTime));
+                document.getElementById('last-login').textContent = date.toLocaleString('fa-IR');
             }
-            
-            // ذخیره زمان ورود فعلی
-            const now = new Date().toLocaleString('fa-IR');
-            localStorage.setItem('admin_last_login', now);
-            
-            // نمایش تاریخ جاری
-            document.getElementById('current-date').textContent = now;
-            
-            // رویدادهای منو
+        }
+        
+        // به‌روزرسانی تاریخ جاری
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('fa-IR', options);
+        }
+        
+        // تنظیم منوی ناوبری
+        function setupMenuNavigation() {
             document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -785,8 +867,8 @@
                     this.classList.add('active');
                     
                     // مخفی کردن همه بخش‌ها
-                    document.querySelectorAll('.card').forEach(card => {
-                        card.classList.remove('active');
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
                     });
                     
                     // نمایش بخش مورد نظر
@@ -798,23 +880,23 @@
                         displayOrdersTable();
                     }
                     
-                    showNotification(`بخش ${this.textContent.trim()} نمایش داده شد`, 'info');
+                    showNotification(`بخش ${this.querySelector('span').textContent} نمایش داده شد`, 'info');
                 });
             });
-            
-            // بارگذاری داده‌ها
-            loadData();
-            
-            console.log('پنل مدیریت راه‌اندازی شد');
-        });
+        }
         
-        // ==================== مدیریت محصولات ====================
+        // ==================== مدیریت داده‌ها ====================
         
         function loadData() {
             // بارگذاری محصولات
             const savedProducts = localStorage.getItem('shop_products');
             if (savedProducts) {
-                products = JSON.parse(savedProducts);
+                try {
+                    products = JSON.parse(savedProducts);
+                } catch (e) {
+                    console.error('خطا در بارگذاری محصولات:', e);
+                    products = [];
+                }
             } else {
                 // داده‌های اولیه
                 products = [
@@ -846,20 +928,29 @@
             const savedOrders = localStorage.getItem('shop_orders');
             orders = savedOrders ? JSON.parse(savedOrders) : [];
             
+            // آپدیت آمار و نمایش
             updateStats();
             displayProductsTable();
             displayOrdersTable();
         }
         
+        // ذخیره محصولات
         function saveProducts() {
-            localStorage.setItem('shop_products', JSON.stringify(products));
-            // برای همگام‌سازی با فروشگاه اصلی
-            localStorage.setItem('shop_products_main', JSON.stringify(products));
+            try {
+                localStorage.setItem('shop_products', JSON.stringify(products));
+                // برای همگام‌سازی با فروشگاه اصلی
+                localStorage.setItem('shop_products_main', JSON.stringify(products));
+                return true;
+            } catch (e) {
+                console.error('خطا در ذخیره محصولات:', e);
+                showNotification('خطا در ذخیره محصولات', 'error');
+                return false;
+            }
         }
         
+        // آپدیت آمار
         function updateStats() {
             document.getElementById('total-products').textContent = products.length;
-            document.getElementById('sys-total-products').textContent = products.length;
             
             const today = new Date().toLocaleDateString('fa-IR');
             const todayOrders = orders.filter(order => order.date && order.date.includes(today));
@@ -871,6 +962,58 @@
             // بازدیدها
             const views = parseInt(localStorage.getItem('shop_views') || Math.floor(Math.random() * 100) + 50);
             document.getElementById('total-views').textContent = views;
+        }
+        
+        // ==================== مدیریت محصولات ====================
+        
+        function setupProductForm() {
+            const form = document.getElementById('add-product-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveOrUpdateProduct();
+                });
+            }
+        }
+        
+        function saveOrUpdateProduct() {
+            const product = {
+                id: currentEditId || Date.now(),
+                name: document.getElementById('product-name').value.trim(),
+                description: document.getElementById('product-description').value.trim(),
+                price: parseInt(document.getElementById('product-price').value) || 0,
+                category: document.getElementById('product-category').value,
+                stock: parseInt(document.getElementById('product-stock').value) || 0,
+                image: document.getElementById('product-image').value.trim(),
+                badge: document.getElementById('product-badge').value || ''
+            };
+            
+            // اعتبارسنجی
+            if (!product.name || !product.description || product.price <= 0 || !product.category || product.stock < 0 || !product.image) {
+                showNotification('لطفاً همه فیلدهای لازم را پر کنید', 'error');
+                return;
+            }
+            
+            if (currentEditId) {
+                // ویرایش محصول موجود
+                const index = products.findIndex(p => p.id === currentEditId);
+                if (index !== -1) {
+                    products[index] = product;
+                }
+                currentEditId = null;
+                document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ذخیره محصول';
+                showNotification('محصول با موفقیت ویرایش شد', 'success');
+            } else {
+                // افزودن محصول جدید
+                products.push(product);
+                showNotification('محصول با موفقیت اضافه شد', 'success');
+            }
+            
+            if (saveProducts()) {
+                updateStats();
+                displayProductsTable();
+                clearProductForm();
+            }
         }
         
         function displayProductsTable() {
@@ -943,48 +1086,6 @@
             return categories[category] || category;
         }
         
-        // فرم افزودن/ویرایش محصول
-        document.getElementById('add-product-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const product = {
-                id: currentEditId || Date.now(),
-                name: document.getElementById('product-name').value.trim(),
-                description: document.getElementById('product-description').value.trim(),
-                price: parseInt(document.getElementById('product-price').value) || 0,
-                category: document.getElementById('product-category').value,
-                stock: parseInt(document.getElementById('product-stock').value) || 0,
-                image: document.getElementById('product-image').value.trim(),
-                badge: document.getElementById('product-badge').value || ''
-            };
-            
-            // اعتبارسنجی
-            if (!product.name || !product.description || product.price <= 0 || !product.category || product.stock < 0 || !product.image) {
-                showNotification('لطفاً همه فیلدهای لازم را پر کنید', 'error');
-                return;
-            }
-            
-            if (currentEditId) {
-                // ویرایش محصول موجود
-                const index = products.findIndex(p => p.id === currentEditId);
-                if (index !== -1) {
-                    products[index] = product;
-                }
-                currentEditId = null;
-                document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ذخیره محصول';
-                showNotification('محصول با موفقیت ویرایش شد', 'success');
-            } else {
-                // افزودن محصول جدید
-                products.push(product);
-                showNotification('محصول با موفقیت اضافه شد', 'success');
-            }
-            
-            saveProducts();
-            updateStats();
-            displayProductsTable();
-            clearProductForm();
-        });
-        
         function editProduct(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
@@ -1002,8 +1103,8 @@
             // تغییر متن دکمه
             document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ویرایش محصول';
             
-            // اسکرول به فرم
-            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+            // اسکرول به بخش محصولات
+            document.querySelector('a[data-section="products"]').click();
             
             showNotification('در حال ویرایش محصول...', 'info');
         }
@@ -1012,16 +1113,19 @@
             if (!confirm('آیا از حذف این محصول اطمینان دارید؟')) return;
             
             products = products.filter(p => p.id !== id);
-            saveProducts();
-            updateStats();
-            displayProductsTable();
-            showNotification('محصول با موفقیت حذف شد', 'success');
+            if (saveProducts()) {
+                updateStats();
+                displayProductsTable();
+                showNotification('محصول با موفقیت حذف شد', 'success');
+            }
         }
         
         function clearProductForm() {
             document.getElementById('add-product-form').reset();
             currentEditId = null;
             document.getElementById('submit-product-btn').innerHTML = '<i class="fas fa-save"></i> ذخیره محصول';
+            document.getElementById('password-strength').className = 'password-strength';
+            document.getElementById('password-strength').style.width = '0';
         }
         
         function addSampleProduct() {
@@ -1034,19 +1138,10 @@
                     stock: 25,
                     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
                     badge: "جدید"
-                },
-                {
-                    name: "ژاکت زمستانی",
-                    description: "گرم و راحت، مناسب فصل سرما",
-                    price: 4200,
-                    category: "clothing",
-                    stock: 30,
-                    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop",
-                    badge: ""
                 }
             ];
             
-            const randomProduct = sampleProducts[Math.floor(Math.random() * sampleProducts.length)];
+            const randomProduct = sampleProducts[0];
             
             document.getElementById('product-name').value = randomProduct.name;
             document.getElementById('product-description').value = randomProduct.description;
@@ -1067,8 +1162,6 @@
             
             tbody.innerHTML = '';
             
-            const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-            
             if (orders.length === 0) {
                 tbody.innerHTML = `
                     <tr>
@@ -1082,7 +1175,7 @@
             }
             
             // نمایش سفارشات از جدید به قدیم
-            orders.reverse().forEach((order, index) => {
+            orders.slice().reverse().forEach((order, index) => {
                 const productsList = order.items ? 
                     order.items.map(item => `${item.name} (${item.quantity} عدد)`).join('<br>') :
                     'محصولات سفارش';
@@ -1110,7 +1203,6 @@
         }
         
         function viewOrder(orderId) {
-            const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
             const order = orders.find(o => o.id == orderId || o.id === orderId);
             
             if (!order) {
@@ -1178,32 +1270,46 @@
             
             // اعتبارسنجی
             if (!currentPass || !newPass || !confirmPass) {
-                messageDiv.innerHTML = '<span style="color: #e74c3c;">لطفاً تمام فیلدها را پر کنید</span>';
+                messageDiv.innerHTML = '<div style="color: #e74c3c; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 6px; border-right: 3px solid #e74c3c;"><i class="fas fa-exclamation-circle"></i> لطفاً تمام فیلدها را پر کنید</div>';
                 return;
             }
             
             if (newPass.length < 6) {
-                messageDiv.innerHTML = '<span style="color: #e74c3c;">رمز عبور باید حداقل ۶ کاراکتر باشد</span>';
+                messageDiv.innerHTML = '<div style="color: #e74c3c; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 6px; border-right: 3px solid #e74c3c;"><i class="fas fa-exclamation-circle"></i> رمز عبور باید حداقل ۶ کاراکتر باشد</div>';
                 return;
             }
             
             if (newPass !== confirmPass) {
-                messageDiv.innerHTML = '<span style="color: #e74c3c;">رمز عبور جدید و تکرار آن مطابقت ندارند</span>';
+                messageDiv.innerHTML = '<div style="color: #e74c3c; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 6px; border-right: 3px solid #e74c3c;"><i class="fas fa-exclamation-circle"></i> رمز عبور جدید و تکرار آن مطابقت ندارند</div>';
                 return;
             }
             
-            // تغییر رمز عبور
+            // تغییر رمز عبور در localStorage
             const storedPassword = localStorage.getItem('admin_password') || '123456';
             
             if (currentPass !== storedPassword) {
-                messageDiv.innerHTML = '<span style="color: #e74c3c;">رمز عبور فعلی نادرست است</span>';
+                messageDiv.innerHTML = '<div style="color: #e74c3c; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 6px; border-right: 3px solid #e74c3c;"><i class="fas fa-exclamation-circle"></i> رمز عبور فعلی نادرست است</div>';
                 return;
             }
             
             // ذخیره رمز جدید
             localStorage.setItem('admin_password', newPass);
             
-            messageDiv.innerHTML = '<span style="color: #27ae60;">رمز عبور با موفقیت تغییر یافت</span>';
+            messageDiv.innerHTML = `
+                <div style="color: #27ae60; padding: 10px; background: rgba(39, 174, 96, 0.1); border-radius: 6px; border-right: 3px solid #27ae60;">
+                    <i class="fas fa-check-circle"></i> رمز عبور با موفقیت تغییر یافت
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-right: 4px solid #3498db;">
+                    <strong><i class="fas fa-info-circle"></i> نکته مهم:</strong>
+                    <p style="color: #666; margin-top: 8px; font-size: 0.9rem;">
+                        این رمز فقط در این مرورگر ذخیره می‌شود.<br>
+                        برای استفاده در سایر دستگاه‌ها یا مرورگرها، باید همین رمز را وارد کنید.
+                    </p>
+                    <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 6px; border: 1px dashed #ddd;">
+                        <strong>رمز جدید:</strong> <code style="background: #eee; padding: 2px 6px; border-radius: 3px; font-family: monospace;">${newPass}</code>
+                    </div>
+                </div>
+            `;
             
             // پاک کردن فرم
             document.getElementById('current-password').value = '';
@@ -1217,8 +1323,7 @@
         
         function logout() {
             if (confirm('آیا می‌خواهید از پنل مدیریت خارج شوید؟')) {
-                sessionStorage.removeItem('admin_logged_in');
-                sessionStorage.removeItem('admin_username');
+                sessionStorage.clear();
                 window.location.href = 'login.html';
             }
         }
@@ -1226,11 +1331,14 @@
         // ==================== نوتیفیکیشن ====================
         
         function showNotification(message, type = 'success') {
+            // حذف نوتیفیکیشن‌های قبلی
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
                 <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
-                ${message}
+                <span>${message}</span>
             `;
             
             document.body.appendChild(notification);
