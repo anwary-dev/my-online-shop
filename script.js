@@ -1,93 +1,103 @@
-// script.js
+// script.js - نسخه اصلاح شده
 
 // داده‌های محصولات
-let products = [
-    {
-        id: 1,
-        name: "گوشی سامسونگ گلکسی A54",
-        description: "گوشی هوشمند با دوربین 50 مگاپیکسل و باتری 5000 میلی‌آمپر",
-        price: 24900,
-        category: "electronics",
-        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
-        badge: "جدید",
-        stock: 15
-    },
-    {
-        id: 2,
-        name: "لپ‌تاپ دل اینسپایرون 15",
-        description: "پردازنده Core i7، رم 16GB، هارد SSD 512GB",
-        price: 89900,
-        category: "electronics",
-        image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
-        badge: "پرفروش",
-        stock: 8
-    },
-    {
-        id: 3,
-        name: "هدفون بلوتوثی سونی",
-        description: "نویزگیری فعال، باتری 30 ساعته، کیفیت صدای عالی",
-        price: 11200,
-        category: "electronics",
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
-        badge: "تخفیف",
-        stock: 25
-    },
-    {
-        id: 4,
-        name: "ژاکت مردانه زمستانی",
-        description: "ژاکت پشمی گرم، مناسب برای فصول سرد سال",
-        price: 3200,
-        category: "clothing",
-        image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop",
-        badge: "",
-        stock: 40
-    },
-    {
-        id: 5,
-        name: "کفش ورزشی نایک",
-        description: "کفش مخصوص دویدن، سبک و راحت",
-        price: 5600,
-        category: "sports",
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop",
-        badge: "پرفروش",
-        stock: 30
-    },
-    {
-        id: 6,
-        name: "ماشین لباسشویی سامسونگ",
-        description: "ظرفیت 8 کیلوگرم، مصرف انرژی A++",
-        price: 45900,
-        category: "home",
-        image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
-        badge: "",
-        stock: 12
-    }
-];
-
-// سبد خرید
+let products = [];
 let cart = [];
 let currentCategory = 'all';
 
-// DOM Elements
-let productsContainer;
-let cartCountElement;
-let cartItemsContainer;
-let cartTotalElement;
-let emptyCartMessage;
-let cartSummary;
+// بارگذاری داده‌ها از localStorage
+function loadFromStorage() {
+    try {
+        const savedCart = localStorage.getItem('shop_cart');
+        const savedProducts = localStorage.getItem('shop_products');
+        
+        if (savedCart) {
+            cart = JSON.parse(savedCart) || [];
+        }
+        
+        if (savedProducts) {
+            products = JSON.parse(savedProducts) || [];
+        } else {
+            // داده‌های اولیه
+            products = [
+                {
+                    id: 1,
+                    name: "گوشی سامسونگ گلکسی A54",
+                    description: "گوشی هوشمند با دوربین 50 مگاپیکسل و باتری 5000 میلی‌آمپر",
+                    price: 24900,
+                    category: "electronics",
+                    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
+                    badge: "جدید",
+                    stock: 15
+                },
+                {
+                    id: 2,
+                    name: "لپ‌تاپ دل اینسپایرون 15",
+                    description: "پردازنده Core i7، رم 16GB، هارد SSD 512GB",
+                    price: 89900,
+                    category: "electronics",
+                    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
+                    badge: "پرفروش",
+                    stock: 8
+                },
+                {
+                    id: 3,
+                    name: "هدفون بلوتوثی سونی",
+                    description: "نویزگیری فعال، باتری 30 ساعته، کیفیت صدای عالی",
+                    price: 11200,
+                    category: "electronics",
+                    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
+                    badge: "تخفیف",
+                    stock: 25
+                },
+                {
+                    id: 4,
+                    name: "ژاکت مردانه زمستانی",
+                    description: "ژاکت پشمی گرم، مناسب برای فصول سرد سال",
+                    price: 3200,
+                    category: "clothing",
+                    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop",
+                    badge: "",
+                    stock: 40
+                }
+            ];
+        }
+        
+        updateCart();
+        displayProducts();
+    } catch (error) {
+        console.error('خطا در بارگذاری داده‌ها:', error);
+        products = [];
+        cart = [];
+    }
+}
+
+// ذخیره در localStorage
+function saveToStorage() {
+    try {
+        localStorage.setItem('shop_cart', JSON.stringify(cart));
+        localStorage.setItem('shop_products', JSON.stringify(products));
+        
+        // برای همگام‌سازی با پنل مدیریت
+        localStorage.setItem('shop_products_main', JSON.stringify(products));
+    } catch (error) {
+        console.error('خطا در ذخیره داده‌ها:', error);
+    }
+}
 
 // نمایش محصولات
 function displayProducts() {
-    if (!productsContainer) return;
+    const container = document.getElementById('products-container');
+    if (!container) return;
     
-    productsContainer.innerHTML = '';
+    container.innerHTML = '';
     
     const filteredProducts = currentCategory === 'all' 
         ? products 
         : products.filter(p => p.category === currentCategory);
     
     if (filteredProducts.length === 0) {
-        productsContainer.innerHTML = `
+        container.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
                 <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
                 <h3 style="color: #666;">محصولی در این دسته‌بندی وجود ندارد</h3>
@@ -119,7 +129,7 @@ function displayProducts() {
                 </div>
             </div>
         `;
-        productsContainer.innerHTML += productCard;
+        container.innerHTML += productCard;
     });
 }
 
@@ -187,6 +197,12 @@ function updateCartItemQuantity(productId, change) {
 
 // آپدیت سبد خرید
 function updateCart() {
+    const cartCountElement = document.getElementById('cart-count');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalElement = document.getElementById('total-price');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartSummary = document.getElementById('cart-summary');
+    
     if (!cartCountElement || !cartItemsContainer || !cartTotalElement || !emptyCartMessage || !cartSummary) return;
     
     // آپدیت تعداد
@@ -232,6 +248,8 @@ function updateCart() {
         
         cartTotalElement.textContent = total.toLocaleString();
     }
+    
+    saveToStorage();
 }
 
 // نمایش/مخفی کردن سبد خرید
@@ -261,55 +279,41 @@ function checkout() {
     // به‌روزرسانی موجودی
     cart.forEach(item => {
         const product = products.find(p => p.id === item.id);
-        product.stock -= item.quantity;
+        if (product) {
+            product.stock -= item.quantity;
+        }
     });
     
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // ذخیره سفارش
+    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
+    orders.push({
+        id: Date.now(),
+        date: new Date().toLocaleString('fa-IR'),
+        items: cart.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+        })),
+        total: total,
+        status: 'پرداخت شده'
+    });
+    localStorage.setItem('shop_orders', JSON.stringify(orders));
+    
+    // نمایش پیام موفقیت
     const orderDetails = cart.map(item => 
         `${item.name} (${item.quantity} عدد)`
     ).join('\n');
     
-    // نمایش جزئیات سفارش
-    const orderSummary = `
-        <div style="text-align: right;">
-            <h3>خلاصه سفارش</h3>
-            <hr>
-            ${cart.map(item => `
-                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
-                    <span>${item.name} (${item.quantity} عدد)</span>
-                    <span>${(item.price * item.quantity).toLocaleString()} افغانی</span>
-                </div>
-            `).join('')}
-            <hr>
-            <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 15px;">
-                <span>مجموع:</span>
-                <span>${total.toLocaleString()} افغانی</span>
-            </div>
-        </div>
-    `;
-    
-    // در حالت واقعی، اینجا اطلاعات به سرور ارسال می‌شود
     alert(`✅ سفارش شما با موفقیت ثبت شد!\n\n${orderDetails}\n\n💰 مجموع: ${total.toLocaleString()} افغانی\n\n🚚 سفارش شما طی 2-3 روز کاری ارسال می‌شود.`);
-    
-    // ذخیره سفارش در localStorage (موقت)
-    saveOrderToHistory(total);
     
     // خالی کردن سبد خرید
     cart = [];
     updateCart();
-    displayProducts(); // برای به‌روزرسانی موجودی
+    displayProducts();
+    saveToStorage();
     toggleCart();
-}
-
-// ذخیره تاریخچه سفارشات
-function saveOrderToHistory(total) {
-    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-    orders.push({
-        date: new Date().toLocaleString('fa-IR'),
-        items: cart.length,
-        total: total
-    });
-    localStorage.setItem('shop_orders', JSON.stringify(orders));
 }
 
 // فیلتر بر اساس دسته‌بندی
@@ -320,11 +324,6 @@ function filterProducts(category) {
     });
     event.target.classList.add('active');
     displayProducts();
-}
-
-// اسکرول به محصولات
-function scrollToProducts() {
-    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
 }
 
 // جستجوی محصولات
@@ -345,10 +344,11 @@ function searchProducts() {
         product.category.includes(searchTerm)
     );
     
-    productsContainer.innerHTML = '';
+    const container = document.getElementById('products-container');
+    container.innerHTML = '';
     
     if (filtered.length === 0) {
-        productsContainer.innerHTML = `
+        container.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
                 <i class="fas fa-search" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
                 <h3 style="color: #666;">هیچ محصولی با عبارت "${searchTerm}" یافت نشد</h3>
@@ -365,6 +365,9 @@ function searchProducts() {
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-desc">${product.description}</p>
+                    <div class="product-stock" style="font-size: 0.9rem; color: ${product.stock > 10 ? '#27ae60' : product.stock > 0 ? '#f39c12' : '#e74c3c'}; margin-bottom: 10px;">
+                        <i class="fas fa-cubes"></i> موجودی: ${product.stock} عدد
+                    </div>
                     <div class="product-price">
                         <div>
                             <span class="price">${product.price.toLocaleString()}</span>
@@ -377,7 +380,7 @@ function searchProducts() {
                 </div>
             </div>
         `;
-        productsContainer.innerHTML += productCard;
+        container.innerHTML += productCard;
     });
 }
 
@@ -425,41 +428,9 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// بارگذاری داده‌ها از localStorage
-function loadFromStorage() {
-    const savedCart = localStorage.getItem('shop_cart');
-    if (savedCart) {
-        cart = JSON.parse(savedCart);
-        updateCart();
-    }
-    
-    const savedProducts = localStorage.getItem('shop_products');
-    if (savedProducts) {
-        products = JSON.parse(savedProducts);
-    }
-}
-
-// ذخیره در localStorage
-function saveToStorage() {
-    localStorage.setItem('shop_cart', JSON.stringify(cart));
-    localStorage.setItem('shop_products', JSON.stringify(products));
-}
-
 // راه‌اندازی اولیه
 document.addEventListener('DOMContentLoaded', () => {
-    // عناصر DOM را پیدا کن
-    productsContainer = document.getElementById('products-container');
-    cartCountElement = document.getElementById('cart-count');
-    cartItemsContainer = document.getElementById('cart-items');
-    cartTotalElement = document.getElementById('total-price');
-    emptyCartMessage = document.getElementById('empty-cart-message');
-    cartSummary = document.getElementById('cart-summary');
-    
-    // بارگذاری از حافظه
     loadFromStorage();
-    
-    // نمایش محصولات
-    displayProducts();
     
     // رویداد دسته‌بندی‌ها
     document.querySelectorAll('.category-btn').forEach(btn => {
@@ -476,9 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') searchProducts();
         });
     }
-    
-    // ذخیره خودکار هر 30 ثانیه
-    setInterval(saveToStorage, 30000);
     
     // بستن سبد خرید با کلیک بیرون
     document.addEventListener('click', (e) => {
@@ -504,15 +472,6 @@ style.textContent = `
     @keyframes slideOut {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .product-card {
-        animation: fadeIn 0.5s ease;
     }
 `;
 document.head.appendChild(style);
