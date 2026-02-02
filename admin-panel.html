@@ -449,282 +449,6 @@
 <body>
     <!-- بررسی وضعیت ورود -->
     <script>
-	// ==================== مدیریت سفارشات پیشرفته ====================
-
-let currentOrderFilter = 'all';
-
-// فیلتر سفارشات
-function filterOrders(status) {
-    currentOrderFilter = status;
-    
-    // آپدیت دکمه‌های فیلتر
-    document.querySelectorAll('.order-filters button').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.getElementById(`filter-${status}`).classList.add('active');
-    
-    // نمایش سفارشات فیلتر شده
-    displayOrdersTable();
-}
-
-// نمایش جدول سفارشات
-function displayOrdersTable() {
-    const tbody = document.getElementById('orders-table-body');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    
-    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-    
-    // فیلتر سفارشات
-    let filteredOrders = orders;
-    if (currentOrderFilter !== 'all') {
-        filteredOrders = orders.filter(order => {
-            if (currentOrderFilter === 'pending') return order.status === 'در انتظار تأیید';
-            if (currentOrderFilter === 'confirmed') return order.status === 'تأیید شده';
-            if (currentOrderFilter === 'delivered') return order.status === 'تحویل شده';
-            return true;
-        });
-    }
-    
-    if (filteredOrders.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
-                    <i class="fas fa-shopping-cart" style="font-size: 2rem; color: #ddd; margin-bottom: 10px; display: block;"></i>
-                    هیچ سفارشی ${currentOrderFilter === 'all' ? '' : 'با این وضعیت'} ثبت نشده است
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    // نمایش سفارشات از جدید به قدیم
-    filteredOrders.slice().reverse().forEach((order, index) => {
-        const productsList = order.items ? 
-            order.items.map(item => `${item.name} (${item.quantity} عدد)`).join('<br>') :
-            'محصولات سفارش';
-        
-        // اطلاعات مشتری
-        const customerName = order.customer ? order.customer.name : 'مشتری آنلاین';
-        const customerPhone = order.customer ? order.customer.phone : 'نامشخص';
-        
-        // وضعیت سفارش
-        const statusClass = getStatusClass(order.status);
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><strong>#${order.id || (filteredOrders.length - index)}</strong></td>
-            <td style="font-size: 0.9rem;">${order.date || 'تاریخ نامشخص'}</td>
-            <td>${customerName}</td>
-            <td style="direction: ltr; text-align: left;">${customerPhone}</td>
-            <td style="font-size: 0.9rem;">${productsList}</td>
-            <td style="font-weight: bold; color: #27ae60;">${order.total ? order.total.toLocaleString('fa-IR') : '0'} افغانی</td>
-            <td>
-                <span class="status-badge ${statusClass}">
-                    ${order.status || 'در انتظار تأیید'}
-                </span>
-            </td>
-            <td>
-                <div class="order-actions">
-                    <button class="action-btn btn-view" onclick="viewOrderDetails(${order.id || index})">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    ${order.status === 'در انتظار تأیید' ? `
-                        <button class="action-btn btn-confirm" onclick="updateOrderStatus(${order.id || index}, 'تأیید شده')">
-                            <i class="fas fa-check"></i>
-                        </button>
-                        <button class="action-btn btn-cancel" onclick="updateOrderStatus(${order.id || index}, 'لغو شده')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    ` : ''}
-                    ${order.status === 'تأیید شده' ? `
-                        <button class="action-btn btn-deliver" onclick="updateOrderStatus(${order.id || index}, 'تحویل شده')">
-                            <i class="fas fa-truck"></i>
-                        </button>
-                    ` : ''}
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// کلاس وضعیت
-function getStatusClass(status) {
-    switch(status) {
-        case 'در انتظار تأیید': return 'status-pending';
-        case 'تأیید شده': return 'status-confirmed';
-        case 'تحویل شده': return 'status-delivered';
-        case 'لغو شده': return 'status-cancelled';
-        default: return 'status-pending';
-    }
-}
-
-// نمایش جزئیات سفارش
-function viewOrderDetails(orderId) {
-    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-    const order = orders.find(o => o.id == orderId || o.id === orderId);
-    
-    if (!order) {
-        showNotification('سفارش یافت نشد!', 'error');
-        return;
-    }
-    
-    // اطلاعات مشتری
-    const customer = order.customer || {
-        name: 'نامشخص',
-        phone: 'نامشخص',
-        address: 'نامشخص',
-        note: ''
-    };
-    
-    // تولید HTML جزئیات
-    let detailsHTML = `
-        <div class="order-details-grid">
-            <div class="detail-card">
-                <h4><i class="fas fa-info-circle"></i> اطلاعات سفارش</h4>
-                <div class="detail-item">
-                    <span class="detail-label">شماره سفارش:</span>
-                    <span class="detail-value">${order.id || 'نامشخص'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">تاریخ سفارش:</span>
-                    <span class="detail-value">${order.date || 'نامشخص'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">مبلغ کل:</span>
-                    <span class="detail-value" style="color: #27ae60; font-size: 1.1rem;">${order.total ? order.total.toLocaleString('fa-IR') : '0'} افغانی</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">وضعیت:</span>
-                    <span class="detail-value">
-                        <span class="status-badge ${getStatusClass(order.status || 'در انتظار تأیید')}">
-                            ${order.status || 'در انتظار تأیید'}
-                        </span>
-                    </span>
-                </div>
-            </div>
-            
-            <div class="detail-card">
-                <h4><i class="fas fa-user"></i> اطلاعات مشتری</h4>
-                <div class="detail-item">
-                    <span class="detail-label">نام کامل:</span>
-                    <span class="detail-value">${customer.name}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">شماره تماس:</span>
-                    <span class="detail-value" style="direction: ltr;">${customer.phone}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">آدرس تحویل:</span>
-                    <span class="detail-value">${customer.address}</span>
-                </div>
-                ${customer.note ? `
-                <div class="detail-item">
-                    <span class="detail-label">یادداشت:</span>
-                    <span class="detail-value">${customer.note}</span>
-                </div>
-                ` : ''}
-            </div>
-        </div>
-        
-        <h4 style="color: #2c3e50; margin: 25px 0 15px;">
-            <i class="fas fa-box-open"></i> محصولات سفارش
-        </h4>
-        
-        <table class="products-table">
-            <thead>
-                <tr>
-                    <th>ردیف</th>
-                    <th>نام محصول</th>
-                    <th>تعداد</th>
-                    <th>قیمت واحد</th>
-                    <th>جمع</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    
-    // افزودن محصولات
-    if (order.items && order.items.length > 0) {
-        order.items.forEach((item, index) => {
-            const itemTotal = item.price * item.quantity;
-            detailsHTML += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${item.name}</td>
-                    <td>${item.quantity} عدد</td>
-                    <td>${item.price.toLocaleString('fa-IR')} افغانی</td>
-                    <td style="font-weight: bold; color: #27ae60;">${itemTotal.toLocaleString('fa-IR')} افغانی</td>
-                </tr>
-            `;
-        });
-    }
-    
-    detailsHTML += `
-            </tbody>
-        </table>
-        
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closeOrderDetails()">
-                    <i class="fas fa-times"></i> بستن
-                </button>
-                ${order.status === 'در انتظار تأیید' ? `
-                    <button class="btn btn-confirm" onclick="updateOrderStatusFromModal(${order.id || orderId}, 'تأیید شده')">
-                        <i class="fas fa-check"></i> تأیید سفارش
-                    </button>
-                ` : ''}
-                ${order.status === 'تأیید شده' ? `
-                    <button class="btn" style="background: #9b59b6; color: white;" onclick="updateOrderStatusFromModal(${order.id || orderId}, 'تحویل شده')">
-                        <i class="fas fa-truck"></i> تحویل شد
-                    </button>
-                ` : ''}
-            </div>
-        </div>
-    `;
-    
-    // نمایش مودال
-    document.getElementById('order-details-content').innerHTML = detailsHTML;
-    document.getElementById('order-details-modal').style.display = 'flex';
-}
-
-// بستن جزئیات سفارش
-function closeOrderDetails() {
-    document.getElementById('order-details-modal').style.display = 'none';
-}
-
-// به‌روزرسانی وضعیت سفارش
-function updateOrderStatus(orderId, newStatus) {
-    if (!confirm(`آیا می‌خواهید وضعیت این سفارش را به "${newStatus}" تغییر دهید؟`)) {
-        return;
-    }
-    
-    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-    const orderIndex = orders.findIndex(o => o.id == orderId || o.id === orderId);
-    
-    if (orderIndex !== -1) {
-        orders[orderIndex].status = newStatus;
-        localStorage.setItem('shop_orders', JSON.stringify(orders));
-        
-        showNotification(`وضعیت سفارش به "${newStatus}" تغییر یافت`, 'success');
-        displayOrdersTable();
-        
-        // اگر در مودال هستیم، ببندیم
-        closeOrderDetails();
-    }
-}
-
-// به‌روزرسانی وضعیت از داخل مودال
-function updateOrderStatusFromModal(orderId, newStatus) {
-    updateOrderStatus(orderId, newStatus);
-}
-
-// بارگذاری سفارشات هنگام ورود به بخش سفارشات
-function loadOrdersSection() {
-    displayOrdersTable();
-}
         // بررسی آیا کاربر وارد شده است
         function checkAuth() {
             const loggedIn = sessionStorage.getItem('admin_logged_in');
@@ -978,65 +702,32 @@ function loadOrdersSection() {
             </div>
 
             <!-- بخش سفارشات -->
-<div class="section" id="orders-section">
-    <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
-        <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
-    </h2>
-    
-    <!-- فیلترهای سفارشات -->
-    <div class="card" style="margin-bottom: 20px;">
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-            <button class="btn btn-secondary" onclick="filterOrders('all')" id="filter-all">
-                همه سفارشات
-            </button>
-            <button class="btn" style="background: #f39c12; color: white;" onclick="filterOrders('pending')" id="filter-pending">
-                در انتظار تأیید
-            </button>
-            <button class="btn" style="background: #3498db; color: white;" onclick="filterOrders('confirmed')" id="filter-confirmed">
-                تأیید شده
-            </button>
-            <button class="btn" style="background: #27ae60; color: white;" onclick="filterOrders('delivered')" id="filter-delivered">
-                تحویل شده
-            </button>
-        </div>
-    </div>
-    
-    <!-- لیست سفارشات -->
-    <div class="card">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>شماره سفارش</th>
-                        <th>تاریخ</th>
-                        <th>مشتری</th>
-                        <th>شماره تماس</th>
-                        <th>محصولات</th>
-                        <th>مبلغ کل</th>
-                        <th>وضعیت</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
-                <tbody id="orders-table-body">
-                    <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- جزئیات سفارش -->
-        <div id="order-details-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-file-invoice"></i> جزئیات سفارش</h3>
-                    <button class="close-modal" onclick="closeOrderDetails()">×</button>
-                </div>
-                <div class="modal-body" id="order-details-content">
-                    <!-- جزئیات سفارش نمایش داده می‌شود -->
+            <div class="section" id="orders-section">
+                <h2 style="margin-bottom: 25px; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #eee;">
+                    <i class="fas fa-shopping-cart"></i> مدیریت سفارشات
+                </h2>
+                
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>شماره سفارش</th>
+                                    <th>تاریخ</th>
+                                    <th>مشتری</th>
+                                    <th>محصولات</th>
+                                    <th>مبلغ کل</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- سفارشات به صورت داینامیک اضافه می‌شوند -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
             <!-- بخش تنظیمات -->
             <div class="section" id="settings-section">
@@ -1665,4 +1356,3 @@ function loadOrdersSection() {
     </script>
 </body>
 </html>
-
