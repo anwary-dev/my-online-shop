@@ -581,31 +581,59 @@ function scrollToProducts() {
 // ==================== مدیریت سبد خرید UI ====================
 
 function toggleCart() {
-    const cartSidebar = document.getElementById('cart-sidebar');
-    if (!cartSidebar) return;
+    console.log('🔘 کلیک روی دکمه سبد خرید');
     
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const body = document.body;
+    
+    if (!cartSidebar) {
+        console.error('❌ المنت cart-sidebar پیدا نشد!');
+        return;
+    }
+    
+    // بررسی وضعیت فعلی
     isCartOpen = !cartSidebar.classList.contains('active');
+    console.log(`📊 وضعیت جدید: ${isCartOpen ? 'باز' : 'بسته'}`);
     
     if (isCartOpen) {
+        // باز کردن سبد خرید
         cartSidebar.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        console.log('📖 سبد خرید باز شد');
+        body.classList.add('cart-open');
+        updateCartDisplay(); // به‌روزرسانی محتوا
+        console.log('✅ سبد خرید باز شد');
     } else {
+        // بستن سبد خرید
         cartSidebar.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        console.log('📕 سبد خرید بسته شد');
+        body.classList.remove('cart-open');
+        console.log('✅ سبد خرید بسته شد');
     }
 }
 
-function animateCartButton() {
-    const cartBtn = document.querySelector('.cart-toggle');
-    if (cartBtn) {
-        cartBtn.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            cartBtn.style.transform = 'scale(1)';
-        }, 300);
+// رویداد کلیک خارج از سبد خرید
+document.addEventListener('DOMContentLoaded', function() {
+    // رویداد برای دکمه بستن
+    const closeCartBtn = document.querySelector('.close-cart');
+    if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleCart();
+        });
     }
-}
+    
+    // کلیک روی overlay برای بستن
+    document.addEventListener('click', function(e) {
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartToggle = document.querySelector('.cart-toggle');
+        
+        if (isCartOpen && 
+            cartSidebar && 
+            !cartSidebar.contains(e.target) && 
+            cartToggle && 
+            !cartToggle.contains(e.target)) {
+            toggleCart();
+        }
+    });
+});
 
 // ==================== سیستم سفارش‌دهی ====================
 
@@ -932,3 +960,4 @@ setInterval(() => {
         console.warn('⚠️ خطا در ذخیره خودکار');
     }
 }, 30000);
+
