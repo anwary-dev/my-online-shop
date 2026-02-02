@@ -972,4 +972,41 @@ setInterval(() => {
     }
 }, 30000);
 
+// ==================== دیباگ و تست ====================
+
+window.debugCart = function() {
+    console.group('🔧 دیباگ سبد خرید');
+    console.log('🛒 آیتم‌های سبد:', cart);
+    console.log('🎯 isCartOpen:', isCartOpen);
+    console.log('🏪 المنت‌ها:');
+    console.log('- cart-toggle:', document.querySelector('.cart-toggle'));
+    console.log('- cart-sidebar:', document.getElementById('cart-sidebar'));
+    console.log('- cart-items:', document.getElementById('cart-items'));
+    console.log('- cart-count:', document.getElementById('cart-count'));
+    console.log('💾 localStorage:', localStorage.getItem('shop_cart'));
+    console.groupEnd();
+    
+    showNotification('اطلاعات دیباگ در کنسول نمایش داده شد', 'info');
+};
+
+// اضافه کردن دکمه دیباگ در حالت توسعه
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const debugBtn = document.createElement('button');
+    debugBtn.textContent = 'دیباگ';
+    debugBtn.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 30px;
+        background: #9b59b6;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        z-index: 1000;
+        font-size: 0.9rem;
+    `;
+    debugBtn.onclick = debugCart;
+    document.body.appendChild(debugBtn);
+}
 
