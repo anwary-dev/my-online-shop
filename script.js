@@ -380,71 +380,82 @@ function updateCartDisplay() {
     // 3. به‌روزرسانی مجموع
     updateCartTotal();
     
-    // 4. نمایش/مخفی پیام سبد خالی
-    toggleEmptyCartMessage();
-}
-
-function updateCartCount() {
-    const cartCountElement = document.getElementById('cart-count');
-    if (!cartCountElement) return;
-    
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCountElement.textContent = totalItems;
+    // 4. نمایش/مخفی خلاصه سبد خرید
+    toggleCartSummary();
 }
 
 function updateCartItems() {
     const cartItemsContainer = document.getElementById('cart-items');
-    if (!cartItemsContainer) return;
-    
-    cartItemsContainer.innerHTML = '';
-    
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p id="empty-cart-message">سبد خرید شما خالی است</p>';
+    if (!cartItemsContainer) {
+        console.error('❌ المنت cart-items پیدا نشد!');
         return;
     }
     
-    cart.forEach(item => {
-        const itemHTML = createCartItemHTML(item);
-        cartItemsContainer.innerHTML += itemHTML;
-    });
-}
-
-function createCartItemHTML(item) {
-    const itemTotal = item.price * item.quantity;
+    console.log(`📦 تعداد آیتم‌ها در سبد: ${cart.length}`);
     
-    return `
-        <div class="cart-item">
-            <img src="${item.image}" 
-                 alt="${item.name}" 
-                 class="cart-item-image"
-                 onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop'">
-            
-            <div class="cart-item-info">
-                <h4 class="cart-item-title">${item.name}</h4>
-                <p class="cart-item-price">${item.price.toLocaleString('fa-IR')} افغانی</p>
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+            <div id="empty-cart-message" style="text-align: center; padding: 40px 20px; color: #7f8c8d;">
+                <i class="fas fa-shopping-basket" style="font-size: 3rem; opacity: 0.3; margin-bottom: 15px; display: block;"></i>
+                <p>سبد خرید شما خالی است</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let itemsHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        itemsHTML += `
+            <div class="cart-item">
+                <img src="${item.image}" 
+                     alt="${item.name}" 
+                     class="cart-item-image"
+                     onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop'">
                 
-                <div class="cart-item-quantity">
-                    <button onclick="changeCartQuantity(${item.id}, -1)" class="quantity-btn minus">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <span class="quantity-number">${item.quantity}</span>
-                    <button onclick="changeCartQuantity(${item.id}, 1)" 
-                            class="quantity-btn plus"
-                            ${item.quantity >= item.stock ? 'disabled' : ''}>
-                        <i class="fas fa-plus"></i>
+                <div class="cart-item-info">
+                    <h4 class="cart-item-title">${item.name}</h4>
+                    <p class="cart-item-price">${item.price.toLocaleString('fa-IR')} افغانی</p>
+                    
+                    <div class="cart-item-quantity">
+                        <button onclick="changeCartQuantity(${item.id}, -1)" class="quantity-btn minus">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="quantity-number">${item.quantity}</span>
+                        <button onclick="changeCartQuantity(${item.id}, 1)" 
+                                class="quantity-btn plus"
+                                ${item.quantity >= item.stock ? 'disabled' : ''}>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cart-item-total">
+                    ${itemTotal.toLocaleString('fa-IR')}
+                    <small>افغانی</small>
+                    <button onclick="removeFromCart(${item.id})" class="remove-item-btn">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
-            
-            <div class="cart-item-total">
-                ${itemTotal.toLocaleString('fa-IR')}
-                <small>افغانی</small>
-                <button onclick="removeFromCart(${item.id})" class="remove-item-btn">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
+        `;
+    });
+    
+    cartItemsContainer.innerHTML = itemsHTML;
+}
+
+function toggleCartSummary() {
+    const cartSummary = document.getElementById('cart-summary');
+    const emptyMessage = document.querySelector('#empty-cart-message');
+    
+    if (!cartSummary) return;
+    
+    if (cart.length === 0) {
+        cartSummary.style.display = 'none';
+    } else {
+        cartSummary.style.display = 'block';
+    }
 }
 
 function updateCartTotal() {
@@ -960,4 +971,5 @@ setInterval(() => {
         console.warn('⚠️ خطا در ذخیره خودکار');
     }
 }, 30000);
+
 
