@@ -5,14 +5,18 @@ let products = [];
 let cart = [];
 let currentCategory = 'all';
 
-// ==================== بارگذاری داده‌ها ====================
-
+// بارگذاری داده‌ها از localStorage
 function loadFromStorage() {
     try {
-        // بارگذاری محصولات
+        const savedCart = localStorage.getItem('shop_cart');
         const savedProducts = localStorage.getItem('shop_products');
+        
+        if (savedCart) {
+            cart = JSON.parse(savedCart) || [];
+        }
+        
         if (savedProducts) {
-            products = JSON.parse(savedProducts);
+            products = JSON.parse(savedProducts) || [];
         } else {
             // داده‌های اولیه
             products = [
@@ -55,33 +59,12 @@ function loadFromStorage() {
                     image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop",
                     badge: "",
                     stock: 40
-                },
-                {
-                    id: 5,
-                    name: "کفش ورزشی نایک",
-                    description: "کفش مخصوص دویدن، سبک و راحت",
-                    price: 5600,
-                    category: "sports",
-                    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop",
-                    badge: "پرفروش",
-                    stock: 30
                 }
             ];
         }
         
-        // بارگذاری سبد خرید
-        const savedCart = localStorage.getItem('shop_cart');
-        if (savedCart) {
-            cart = JSON.parse(savedCart);
-        }
-        
-        // نمایش محصولات
-        displayProducts();
-        
-        // آپدیت سبد خرید
         updateCart();
-        
-        console.log('داده‌ها بارگذاری شد:', products.length, 'محصول،', cart.length, 'آیتم در سبد');
+        displayProducts();
     } catch (error) {
         console.error('خطا در بارگذاری داده‌ها:', error);
         products = [];
@@ -89,20 +72,20 @@ function loadFromStorage() {
     }
 }
 
-// ==================== ذخیره داده‌ها ====================
-
+// ذخیره در localStorage
 function saveToStorage() {
     try {
         localStorage.setItem('shop_cart', JSON.stringify(cart));
         localStorage.setItem('shop_products', JSON.stringify(products));
-        console.log('داده‌ها ذخیره شد');
+        
+        // برای همگام‌سازی با پنل مدیریت
+        localStorage.setItem('shop_products_main', JSON.stringify(products));
     } catch (error) {
         console.error('خطا در ذخیره داده‌ها:', error);
     }
 }
 
-// ==================== نمایش محصولات ====================
-
+// نمایش محصولات
 function displayProducts() {
     const container = document.getElementById('products-container');
     if (!container) return;
@@ -127,8 +110,7 @@ function displayProducts() {
         const productCard = `
             <div class="product-card" data-category="${product.category}">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image" 
-                     onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop'">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-desc">${product.description}</p>
@@ -137,7 +119,7 @@ function displayProducts() {
                     </div>
                     <div class="product-price">
                         <div>
-                            <span class="price">${product.price.toLocaleString('fa-IR')}</span>
+                            <span class="price">${product.price.toLocaleString()}</span>
                             <span class="price-currency">افغانی</span>
                         </div>
                         <button class="add-to-cart" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
@@ -150,8 +132,6 @@ function displayProducts() {
         container.innerHTML += productCard;
     });
 }
-
-// ==================== مدیریت سبد خرید ====================
 
 // اضافه کردن به سبد خرید
 function addToCart(productId) {
@@ -177,26 +157,26 @@ function addToCart(productId) {
         existingItem.quantity += 1;
     } else {
         cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
+            ...product,
             quantity: 1
         });
     }
     
     updateCart();
-    saveToStorage();
     showNotification(`${product.name} به سبد خرید اضافه شد`, 'success');
 }
 
-// تغییر تعداد آیتم در سبد خرید
-function changeCartQuantity(productId, change) {
+// حذف از سبد خرید
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCart();
+    showNotification('محصول از سبد خرید حذف شد', 'info');
+}
+
+// تغییر مقدار محصول در سبد خرید
+function updateCartItemQuantity(productId, change) {
     const item = cart.find(item => item.id === productId);
     if (!item) return;
-    
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
     
     const newQuantity = item.quantity + change;
     
@@ -205,6 +185,7 @@ function changeCartQuantity(productId, change) {
         return;
     }
     
+    const product = products.find(p => p.id === productId);
     if (newQuantity > product.stock) {
         showNotification(`حداکثر ${product.stock} عدد از این محصول قابل خرید است!`, 'error');
         return;
@@ -212,30 +193,17 @@ function changeCartQuantity(productId, change) {
     
     item.quantity = newQuantity;
     updateCart();
-    saveToStorage();
 }
 
-// حذف از سبد خرید
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    updateCart();
-    saveToStorage();
-    showNotification('محصول از سبد خرید حذف شد', 'info');
-}
-
-// آپدیت نمایش سبد خرید
+// آپدیت سبد خرید
 function updateCart() {
-    // عناصر DOM
     const cartCountElement = document.getElementById('cart-count');
     const cartItemsContainer = document.getElementById('cart-items');
     const cartTotalElement = document.getElementById('total-price');
     const emptyCartMessage = document.getElementById('empty-cart-message');
     const cartSummary = document.getElementById('cart-summary');
     
-    if (!cartCountElement || !cartItemsContainer || !cartTotalElement || !emptyCartMessage || !cartSummary) {
-        console.log('عناصر سبد خرید یافت نشد');
-        return;
-    }
+    if (!cartCountElement || !cartItemsContainer || !cartTotalElement || !emptyCartMessage || !cartSummary) return;
     
     // آپدیت تعداد
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -245,31 +213,29 @@ function updateCart() {
     if (cart.length === 0) {
         emptyCartMessage.style.display = 'block';
         cartSummary.style.display = 'none';
-        cartItemsContainer.innerHTML = '';
     } else {
         emptyCartMessage.style.display = 'none';
         cartSummary.style.display = 'block';
         
-        let cartHTML = '';
+        cartItemsContainer.innerHTML = '';
         let total = 0;
         
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
             
-            cartHTML += `
+            const cartItem = `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image"
-                         onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop'">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                     <div class="cart-item-info">
                         <div class="cart-item-title">${item.name}</div>
                         <div class="cart-item-price">
-                            ${item.price.toLocaleString('fa-IR')} افغانی
+                            ${item.price.toLocaleString()} افغانی
                         </div>
                         <div class="cart-item-quantity" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                            <button onclick="changeCartQuantity(${item.id}, -1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; font-size: 1.2rem;">-</button>
-                            <span style="font-weight: bold; min-width: 30px; text-align: center;">${item.quantity}</span>
-                            <button onclick="changeCartQuantity(${item.id}, 1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; font-size: 1.2rem;">+</button>
+                            <button onclick="updateCartItemQuantity(${item.id}, -1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer;">-</button>
+                            <span style="font-weight: bold;">${item.quantity}</span>
+                            <button onclick="updateCartItemQuantity(${item.id}, 1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer;">+</button>
                         </div>
                     </div>
                     <button class="remove-item" onclick="removeFromCart(${item.id})">
@@ -277,14 +243,14 @@ function updateCart() {
                     </button>
                 </div>
             `;
+            cartItemsContainer.innerHTML += cartItem;
         });
         
-        cartItemsContainer.innerHTML = cartHTML;
-        cartTotalElement.textContent = total.toLocaleString('fa-IR');
+        cartTotalElement.textContent = total.toLocaleString();
     }
+    
+    saveToStorage();
 }
-
-// ==================== سایر عملکردها ====================
 
 // نمایش/مخفی کردن سبد خرید
 function toggleCart() {
@@ -304,18 +270,13 @@ function checkout() {
     // بررسی موجودی
     for (const item of cart) {
         const product = products.find(p => p.id === item.id);
-        if (!product) {
-            showNotification(`محصول ${item.name} یافت نشد!`, 'error');
-            return;
-        }
-        
         if (item.quantity > product.stock) {
             showNotification(`موجودی ${product.name} کافی نیست!`, 'error');
             return;
         }
     }
     
-    // کسر از موجودی
+    // به‌روزرسانی موجودی
     cart.forEach(item => {
         const product = products.find(p => p.id === item.id);
         if (product) {
@@ -323,24 +284,21 @@ function checkout() {
         }
     });
     
-    // ثبت سفارش
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const order = {
+    
+    // ذخیره سفارش
+    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
+    orders.push({
         id: Date.now(),
         date: new Date().toLocaleString('fa-IR'),
         items: cart.map(item => ({
-            id: item.id,
             name: item.name,
             quantity: item.quantity,
             price: item.price
         })),
         total: total,
         status: 'پرداخت شده'
-    };
-    
-    // ذخیره سفارش
-    const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
-    orders.push(order);
+    });
     localStorage.setItem('shop_orders', JSON.stringify(orders));
     
     // نمایش پیام موفقیت
@@ -348,33 +306,23 @@ function checkout() {
         `${item.name} (${item.quantity} عدد)`
     ).join('\n');
     
-    alert(`✅ سفارش شما با موفقیت ثبت شد!\n\n${orderDetails}\n\n💰 مجموع: ${total.toLocaleString('fa-IR')} افغانی\n\n🚚 سفارش شما طی 2-3 روز کاری ارسال می‌شود.`);
+    alert(`✅ سفارش شما با موفقیت ثبت شد!\n\n${orderDetails}\n\n💰 مجموع: ${total.toLocaleString()} افغانی\n\n🚚 سفارش شما طی 2-3 روز کاری ارسال می‌شود.`);
     
     // خالی کردن سبد خرید
     cart = [];
     updateCart();
-    saveProducts();
+    displayProducts();
     saveToStorage();
     toggleCart();
-    displayProducts();
-    
-    showNotification('سفارش با موفقیت ثبت شد!', 'success');
 }
 
-// ذخیره محصولات
-function saveProducts() {
-    localStorage.setItem('shop_products', JSON.stringify(products));
-}
-
-// فیلتر محصولات
+// فیلتر بر اساس دسته‌بندی
 function filterProducts(category) {
     currentCategory = category;
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.dataset.category === category) {
-            btn.classList.add('active');
-        }
     });
+    event.target.classList.add('active');
     displayProducts();
 }
 
@@ -383,10 +331,9 @@ function searchProducts() {
     const searchInput = document.getElementById('search-input');
     if (!searchInput) return;
     
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const container = document.getElementById('products-container');
+    const searchTerm = searchInput.value.toLowerCase();
     
-    if (!searchTerm) {
+    if (searchTerm.trim() === '') {
         displayProducts();
         return;
     }
@@ -394,9 +341,10 @@ function searchProducts() {
     const filtered = products.filter(product => 
         product.name.toLowerCase().includes(searchTerm) ||
         product.description.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm)
+        product.category.includes(searchTerm)
     );
     
+    const container = document.getElementById('products-container');
     container.innerHTML = '';
     
     if (filtered.length === 0) {
@@ -413,8 +361,7 @@ function searchProducts() {
         const productCard = `
             <div class="product-card">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image"
-                     onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop'">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-desc">${product.description}</p>
@@ -423,7 +370,7 @@ function searchProducts() {
                     </div>
                     <div class="product-price">
                         <div>
-                            <span class="price">${product.price.toLocaleString('fa-IR')}</span>
+                            <span class="price">${product.price.toLocaleString()}</span>
                             <span class="price-currency">افغانی</span>
                         </div>
                         <button class="add-to-cart" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
@@ -437,8 +384,7 @@ function searchProducts() {
     });
 }
 
-// ==================== نوتیفیکیشن ====================
-
+// نوتیفیکیشن
 function showNotification(message, type = 'success') {
     const colors = {
         success: '#27ae60',
@@ -477,25 +423,19 @@ function showNotification(message, type = 'success') {
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease forwards';
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
+            notification.remove();
         }, 300);
     }, 3000);
 }
 
-// ==================== راه‌اندازی اولیه ====================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('فروشگاه در حال راه‌اندازی...');
-    
-    // بارگذاری داده‌ها
+// راه‌اندازی اولیه
+document.addEventListener('DOMContentLoaded', () => {
     loadFromStorage();
     
     // رویداد دسته‌بندی‌ها
     document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            filterProducts(this.dataset.category);
+        btn.addEventListener('click', (e) => {
+            filterProducts(e.target.dataset.category);
         });
     });
     
@@ -503,13 +443,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.addEventListener('input', searchProducts);
-        searchInput.addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchProducts();
         });
     }
     
     // بستن سبد خرید با کلیک بیرون
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', (e) => {
         const cartSidebar = document.getElementById('cart-sidebar');
         const cartToggle = document.querySelector('.cart-toggle');
         
@@ -519,11 +459,6 @@ document.addEventListener('DOMContentLoaded', function() {
             cartSidebar.classList.remove('active');
         }
     });
-    
-    // ذخیره خودکار
-    setInterval(saveToStorage, 30000);
-    
-    console.log('فروشگاه راه‌اندازی شد');
 });
 
 // استایل برای انیمیشن‌ها
