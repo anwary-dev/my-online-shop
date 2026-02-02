@@ -343,7 +343,7 @@
             
             // نمایش پیام خوش‌آمدگویی
             setTimeout(() => {
-                showMessage('برای ورود به ادمین سایت تماس بگیرید', 'info');
+                showMessage('برای ورود از admin / 123456 استفاده کنید', 'info');
             }, 1000);
         });
         
@@ -464,8 +464,9 @@
             event.preventDefault();
             
             const message = `
-                <strong> درصورت فراموشی رمز:</strong><br><br>
-                👤 <strong>به خدمات سایت تماس بگیرید<br>
+                <strong>🔑 اطلاعات ورود پیش‌فرض:</strong><br><br>
+                👤 <strong>نام کاربری:</strong> admin<br>
+                🔒 <strong>رمز عبور:</strong> 123456<br><br>
                 
                 <strong>📝 اگر رمز را تغییر داده‌اید:</strong><br>
                 1. رمز قدیمی را وارد کنید<br>
@@ -540,4 +541,3 @@
     </script>
 </body>
 </html>
-
